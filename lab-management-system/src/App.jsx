@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2025 Nipuna Lakruwan
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./components/admin/AdminLayout";
 import LecturerLayout from "./components/lecturer/LecturerLayout";
@@ -39,28 +39,59 @@ import Register from "./pages/auth/Register";
 import PendingApproval from "./pages/auth/PendingApproval";
 
 function App() {
-  // This would normally be handled by an auth context or state management
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  const userRole = localStorage.getItem("userRole") || "admin"; // Default to admin for demo
-  const isPending = localStorage.getItem("accountStatus") === "pending";
+  // Add state to force re-render when authentication state changes
+  const [authState, setAuthState] = useState({
+    isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
+    userRole: localStorage.getItem("userRole") || "",
+    isPending: localStorage.getItem("accountStatus") === "pending"
+  });
+
+  // Listen for changes to localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setAuthState({
+        isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
+        userRole: localStorage.getItem("userRole") || "",
+        isPending: localStorage.getItem("accountStatus") === "pending"
+      });
+    };
+
+    // This will catch changes from other tabs/windows
+    window.addEventListener('storage', handleStorageChange);
+
+    // Check authentication status periodically
+    const checkAuthInterval = setInterval(() => {
+      const currentIsAuth = localStorage.getItem("isAuthenticated") === "true";
+      const currentRole = localStorage.getItem("userRole") || "";
+
+      if (currentIsAuth !== authState.isAuthenticated || currentRole !== authState.userRole) {
+        handleStorageChange();
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(checkAuthInterval);
+    };
+  }, [authState.isAuthenticated, authState.userRole]);
 
   // Redirect based on user role
   const getHomePage = () => {
-    if (!isAuthenticated) return <Navigate to="/login" />;
+    if (!authState.isAuthenticated) return <Navigate to="/login" />;
 
-    if (userRole === "admin") {
+    if (authState.userRole === "admin") {
       return (
         <AdminLayout>
           <Dashboard />
         </AdminLayout>
       );
-    } else if (userRole === "lecturer") {
+    } else if (authState.userRole === "lecturer") {
       return (
         <LecturerLayout>
           <LecturerDashboard />
         </LecturerLayout>
       );
-    } else if (userRole === "student") {
+    } else if (authState.userRole === "student") {
       return (
         <StudentLayout>
           <StudentDashboard />
@@ -72,56 +103,133 @@ function App() {
     return <Navigate to="/login" />;
   };
 
+  // Protected route component
+  const ProtectedRoute = ({ children, requiredRole }) => {
+    if (!authState.isAuthenticated) {
+      return <Navigate to="/login" />;
+    }
+
+    if (requiredRole && authState.userRole !== requiredRole) {
+      return <Navigate to="/" />;
+    }
+
+    return children;
+  };
+
   return (
     <Router>
       <Routes>
         {/* Auth Routes - accessible when not logged in */}
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
-        <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
-        <Route path="/pending-approval" element={!isPending ? <Navigate to="/login" /> : <PendingApproval />} />
+        <Route path="/login" element={authState.isAuthenticated ? <Navigate to="/" /> : <Login />} />
+        <Route path="/register" element={authState.isAuthenticated ? <Navigate to="/" /> : <Register />} />
+        <Route path="/pending-approval" element={!authState.isPending ? <Navigate to="/login" /> : <PendingApproval />} />
 
         {/* Home route - redirects based on role */}
         <Route path="/" element={getHomePage()} />
 
         {/* Admin Routes */}
-        {isAuthenticated && userRole === "admin" && (
-          <>
-            <Route path="/users" element={<AdminLayout><UserManagement /></AdminLayout>} />
-            <Route path="/requests" element={<AdminLayout><Requests /></AdminLayout>} />
-            <Route path="/labs" element={<AdminLayout><Labs /></AdminLayout>} />
-            <Route path="/reservations" element={<AdminLayout><Reservations /></AdminLayout>} />
-            <Route path="/audit-logs" element={<AdminLayout><AuditLogs /></AdminLayout>} />
-            <Route path="/settings" element={<AdminLayout><Settings /></AdminLayout>} />
-            <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
-            <Route path="/user-profiles" element={<AdminLayout><UserProfiles /></AdminLayout>} />
-          </>
-        )}
+        <Route path="/users" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><UserManagement /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/requests" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><Requests /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/labs" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><Labs /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/reservations" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><Reservations /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/audit-logs" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><AuditLogs /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><Settings /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin-profile" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><AdminProfile /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/user-profiles" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout><UserProfiles /></AdminLayout>
+          </ProtectedRoute>
+        } />
 
         {/* Lecturer Routes */}
-        {isAuthenticated && userRole === "lecturer" && (
-          <>
-            <Route path="/lecturer" element={<LecturerLayout><LecturerDashboard /></LecturerLayout>} />
-            <Route path="/lecturer/request-reservation" element={<LecturerLayout><RequestReservation /></LecturerLayout>} />
-            <Route path="/lecturer/my-reservations" element={<LecturerLayout><MyReservations /></LecturerLayout>} />
-            <Route path="/lecturer/approved-sessions" element={<LecturerLayout><ApprovedSessions /></LecturerLayout>} />
-            <Route path="/lecturer/profile" element={<LecturerLayout><LecturerProfile /></LecturerLayout>} />
-          </>
-        )}
+        <Route path="/lecturer" element={
+          <ProtectedRoute requiredRole="lecturer">
+            <LecturerLayout><LecturerDashboard /></LecturerLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lecturer/request-reservation" element={
+          <ProtectedRoute requiredRole="lecturer">
+            <LecturerLayout><RequestReservation /></LecturerLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lecturer/my-reservations" element={
+          <ProtectedRoute requiredRole="lecturer">
+            <LecturerLayout><MyReservations /></LecturerLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lecturer/approved-sessions" element={
+          <ProtectedRoute requiredRole="lecturer">
+            <LecturerLayout><ApprovedSessions /></LecturerLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/lecturer/profile" element={
+          <ProtectedRoute requiredRole="lecturer">
+            <LecturerLayout><LecturerProfile /></LecturerLayout>
+          </ProtectedRoute>
+        } />
 
         {/* Student Routes */}
-        {isAuthenticated && userRole === "student" && (
-          <>
-            <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
-            <Route path="/student/view-labs" element={<StudentLayout><ViewLabs /></StudentLayout>} />
-            <Route path="/student/book-lab" element={<StudentLayout><BookLab /></StudentLayout>} />
-            <Route path="/student/my-bookings" element={<StudentLayout><MyBookings /></StudentLayout>} />
-            <Route path="/student/reservation-history" element={<StudentLayout><ReservationHistory /></StudentLayout>} />
-            <Route path="/student/profile" element={<StudentLayout><StudentProfile /></StudentLayout>} />
-          </>
-        )}
+        <Route path="/student" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><StudentDashboard /></StudentLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/student/view-labs" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><ViewLabs /></StudentLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/student/book-lab" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><BookLab /></StudentLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/student/my-bookings" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><MyBookings /></StudentLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/student/reservation-history" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><ReservationHistory /></StudentLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/student/profile" element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout><StudentProfile /></StudentLayout>
+          </ProtectedRoute>
+        } />
 
         {/* Catch-all redirect to login */}
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />
+        <Route path="*" element={<Navigate to={authState.isAuthenticated ? "/" : "/login"} />} />
       </Routes>
     </Router>
   );

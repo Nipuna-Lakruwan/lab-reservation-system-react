@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2025 Nipuna Lakruwan
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
@@ -17,16 +17,50 @@ const Login = () => {
   const [resetSent, setResetSent] = useState(false);
   const navigate = useNavigate();
 
+  // Track if form has valid input to trigger auto-submission
+  const [formReady, setFormReady] = useState(false);
+
+  // Auto-submit the form when both fields are filled correctly
+  useEffect(() => {
+    const { email, password } = credentials;
+
+    // Check if both fields have values
+    if (email && password) {
+      // Simple email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isEmailValid = emailRegex.test(email);
+
+      // Set form as ready when both email looks valid and password is provided
+      // Changed from password.length >= 6 to just check if password exists
+      setFormReady(isEmailValid && password.length > 0);
+    } else {
+      setFormReady(false);
+    }
+  }, [credentials]);
+
+  // Handle auto-submission when form is ready
+  useEffect(() => {
+    if (formReady && !loading) {
+      handleSubmit();
+    }
+  }, [formReady]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials(prev => ({
       ...prev,
       [name]: value
     }));
+
+    // Clear any previous errors when user is typing
+    if (error) setError(null);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+
+    if (loading) return;
+
     setLoading(true);
     setError(null);
 
@@ -36,26 +70,36 @@ const Login = () => {
 
       // Demo authentication logic
       if (email === "admin@example.com" && password === "password") {
+        // Store auth data first
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userRole", "admin");
         localStorage.setItem("user", JSON.stringify({ name: "Admin User", email }));
+
+        // Navigate after storage is set
         navigate("/");
       } else if (email === "lecturer@example.com" && password === "password") {
+        // Store auth data first
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userRole", "lecturer");
         localStorage.setItem("user", JSON.stringify({ name: "Dr. Sarah Johnson", email }));
+
+        // Navigate after storage is set
         navigate("/lecturer");
       } else if (email === "student@example.com" && password === "password") {
+        // Store auth data first
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userRole", "student");
         localStorage.setItem("user", JSON.stringify({ name: "John Smith", email }));
+
+        // Navigate after storage is set
         navigate("/student");
       } else {
         setError("Invalid email or password. Please try again.");
+        setFormReady(false);
       }
-      
+
       setLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   const handleResetPassword = (e) => {
