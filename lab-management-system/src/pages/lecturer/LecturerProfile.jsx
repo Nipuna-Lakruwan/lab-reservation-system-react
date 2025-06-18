@@ -16,7 +16,7 @@ const LecturerProfile = () => {
     bio: "Dr. Sarah Johnson is an associate professor with over 10 years of teaching experience. She specializes in software engineering and database systems, with a focus on agile methodologies and educational technologies.",
     courses: ["CS101: Introduction to Programming", "CS404: Advanced Software Engineering", "CS305: Database Management Systems"]
   });
-  
+
   const [editing, setEditing] = useState(null);
   const [editedValue, setEditedValue] = useState("");
   const [saving, setSaving] = useState(false);
@@ -37,9 +37,9 @@ const LecturerProfile = () => {
   // Handle field update
   const handleUpdate = () => {
     if (!editing) return;
-    
+
     setSaving(true);
-    
+
     // Simulate API call to update profile
     setTimeout(() => {
       setProfile(prev => ({
@@ -63,7 +63,7 @@ const LecturerProfile = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Clear error when typing
     if (passwordErrors[name]) {
       setPasswordErrors(prev => ({
@@ -76,32 +76,32 @@ const LecturerProfile = () => {
   // Handle password update
   const handleUpdatePassword = (e) => {
     e.preventDefault();
-    
+
     // Validate password
     const errors = {};
     if (!passwordForm.currentPassword) {
       errors.currentPassword = "Current password is required";
     }
-    
+
     if (!passwordForm.newPassword) {
       errors.newPassword = "New password is required";
     } else if (passwordForm.newPassword.length < 8) {
       errors.newPassword = "Password must be at least 8 characters";
     }
-    
+
     if (!passwordForm.confirmPassword) {
       errors.confirmPassword = "Please confirm your password";
     } else if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-    
+
     if (Object.keys(errors).length > 0) {
       setPasswordErrors(errors);
       return;
     }
-    
+
     setSaving(true);
-    
+
     // Simulate API call to update password
     setTimeout(() => {
       setSaving(false);
@@ -111,7 +111,7 @@ const LecturerProfile = () => {
         newPassword: "",
         confirmPassword: ""
       });
-      
+
       alert("Password updated successfully!");
     }, 1000);
   };
@@ -120,7 +120,7 @@ const LecturerProfile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = (event) => {
       setProfile(prev => ({
@@ -146,32 +146,32 @@ const LecturerProfile = () => {
         <div className="relative bg-gradient-to-r from-[#042E6F] to-[#0960d0] h-32 md:h-48">
           <div className="absolute -bottom-16 left-8 rounded-xl bg-white p-2 shadow-lg">
             <div className="relative">
-              <img 
-                src={profile.image} 
-                alt={profile.name} 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover" 
+              <img
+                src={profile.image}
+                alt={profile.name}
+                className="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover"
               />
               <label className="absolute bottom-0 right-0 bg-[#042E6F] text-white p-2 rounded-full cursor-pointer hover:bg-[#021E47] transition shadow">
                 <FaCamera />
-                <input 
-                  type="file" 
-                  className="hidden" 
-                  accept="image/*" 
-                  onChange={handleImageChange} 
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageChange}
                   aria-label="Change profile picture"
                 />
               </label>
             </div>
           </div>
         </div>
-        
+
         {/* Profile Details */}
         <div className="pt-20 px-6 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column - Basic Info */}
             <div>
               <h2 className="text-xl font-bold text-[#042E6F] mb-4">Personal Information</h2>
-              
+
               {/* Name */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -179,7 +179,7 @@ const LecturerProfile = () => {
                     <FaUser className="mr-2 text-[#042E6F]" /> Full Name
                   </label>
                   {editing !== "name" && (
-                    <button 
+                    <button
                       onClick={() => handleEdit("name", profile.name)}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit name"
@@ -222,7 +222,7 @@ const LecturerProfile = () => {
                   <p className="font-medium text-lg">{profile.name}</p>
                 )}
               </div>
-              
+
               {/* Email */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -230,7 +230,7 @@ const LecturerProfile = () => {
                     <FaEnvelope className="mr-2 text-[#042E6F]" /> Email
                   </label>
                   {editing !== "email" && (
-                    <button 
+                    <button
                       onClick={() => handleEdit("email", profile.email)}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit email"
@@ -273,7 +273,7 @@ const LecturerProfile = () => {
                   <p className="font-medium">{profile.email}</p>
                 )}
               </div>
-              
+
               {/* Phone */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -281,7 +281,7 @@ const LecturerProfile = () => {
                     <FaPhone className="mr-2 text-[#042E6F]" /> Phone
                   </label>
                   {editing !== "phone" && (
-                    <button 
+                    <button
                       onClick={() => handleEdit("phone", profile.phone)}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit phone"
@@ -324,7 +324,7 @@ const LecturerProfile = () => {
                   <p className="font-medium">{profile.phone}</p>
                 )}
               </div>
-              
+
               {/* Password Section */}
               <div className="mt-6">
                 <h3 className="text-lg font-semibold text-[#042E6F] mb-2">Security</h3>
@@ -405,11 +405,11 @@ const LecturerProfile = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Right Column - Professional Info */}
             <div>
               <h2 className="text-xl font-bold text-[#042E6F] mb-4">Professional Information</h2>
-              
+
               {/* Department */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -417,7 +417,7 @@ const LecturerProfile = () => {
                     <FaUniversity className="mr-2 text-[#042E6F]" /> Department
                   </label>
                   {editing !== "department" && (
-                    <button 
+                    <button
                       onClick={() => handleEdit("department", profile.department)}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit department"
@@ -460,7 +460,7 @@ const LecturerProfile = () => {
                   <p className="font-medium">{profile.department}</p>
                 )}
               </div>
-              
+
               {/* Specialization */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
@@ -468,7 +468,7 @@ const LecturerProfile = () => {
                     <FaBookOpen className="mr-2 text-[#042E6F]" /> Specialization
                   </label>
                   {editing !== "specialization" && (
-                    <button 
+                    <button
                       onClick={() => handleEdit("specialization", profile.specialization)}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit specialization"
@@ -511,13 +511,13 @@ const LecturerProfile = () => {
                   <p className="font-medium">{profile.specialization}</p>
                 )}
               </div>
-              
+
               {/* Bio */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-sm text-gray-500">Bio</label>
                   {editing !== "bio" && (
-                    <button 
+                    <button
                       onClick={handleBioEdit}
                       className="text-[#042E6F] hover:text-[#021E47] p-1"
                       aria-label="Edit bio"
@@ -559,7 +559,7 @@ const LecturerProfile = () => {
                   <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{profile.bio}</p>
                 )}
               </div>
-              
+
               {/* Courses */}
               <div>
                 <div className="mb-1">

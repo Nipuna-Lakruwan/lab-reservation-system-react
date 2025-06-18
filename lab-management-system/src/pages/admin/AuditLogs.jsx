@@ -2,17 +2,17 @@
  * Copyright (c) 2025 Nipuna Lakruwan
  */
 import React, { useState, useEffect } from "react";
-import { 
-  FaHistory, FaSearch, FaFilter, FaDownload, FaEye, 
-  FaChevronLeft, FaChevronRight, FaSort, FaSortUp, FaSortDown, 
+import {
+  FaHistory, FaSearch, FaFilter, FaDownload, FaEye,
+  FaChevronLeft, FaChevronRight, FaSort, FaSortUp, FaSortDown,
   FaInfoCircle, FaFileExport, FaCalendarAlt, FaUser, FaCog
 } from "react-icons/fa";
 
 // Generate demo audit logs
 const generateAuditLogs = () => {
   const actionTypes = [
-    "login", "logout", "reservation_created", "reservation_approved", 
-    "reservation_rejected", "user_created", "user_updated", "user_deleted", 
+    "login", "logout", "reservation_created", "reservation_approved",
+    "reservation_rejected", "user_created", "user_updated", "user_deleted",
     "lab_created", "lab_updated", "settings_changed", "password_reset"
   ];
 
@@ -26,7 +26,7 @@ const generateAuditLogs = () => {
   ];
 
   const getDetails = (actionType, user) => {
-    switch(actionType) {
+    switch (actionType) {
       case "login":
         return `${user.name} logged into the system`;
       case "logout":
@@ -68,21 +68,21 @@ const generateAuditLogs = () => {
 
   const logs = [];
   const now = new Date();
-  
+
   // Generate 100 random logs spanning the last 30 days
   for (let i = 1; i <= 100; i++) {
     const daysAgo = Math.floor(Math.random() * 30);
     const hoursAgo = Math.floor(Math.random() * 24);
     const minutesAgo = Math.floor(Math.random() * 60);
-    
+
     const timestamp = new Date(now);
     timestamp.setDate(timestamp.getDate() - daysAgo);
     timestamp.setHours(timestamp.getHours() - hoursAgo);
     timestamp.setMinutes(timestamp.getMinutes() - minutesAgo);
-    
+
     const user = users[Math.floor(Math.random() * users.length)];
     const actionType = actionTypes[Math.floor(Math.random() * actionTypes.length)];
-    
+
     logs.push({
       id: i,
       timestamp,
@@ -94,7 +94,7 @@ const generateAuditLogs = () => {
       deviceInfo: Math.random() > 0.5 ? "Desktop - Chrome" : "Mobile - Safari"
     });
   }
-  
+
   // Sort logs by timestamp (newest first)
   return logs.sort((a, b) => b.timestamp - a.timestamp);
 };
@@ -159,39 +159,39 @@ const AuditLogs = () => {
   // Apply filters and search
   useEffect(() => {
     setLoading(true);
-    
+
     let results = [...logs];
-    
+
     // Apply search term
     if (searchTerm) {
-      results = results.filter(log => 
+      results = results.filter(log =>
         log.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
         log.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         log.ipAddress.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     // Apply action type filter
     if (filters.actionType !== "all") {
       results = results.filter(log => log.actionType === filters.actionType);
     }
-    
+
     // Apply user filter
     if (filters.userId !== "all") {
       results = results.filter(log => log.user.id === filters.userId);
     }
-    
+
     // Apply severity filter
     if (filters.severity !== "all") {
       results = results.filter(log => log.severity === filters.severity);
     }
-    
+
     // Apply date range filters
     if (filters.timeRange === "custom" && filters.startDate && filters.endDate) {
       const startDate = new Date(filters.startDate);
       const endDate = new Date(filters.endDate);
       endDate.setHours(23, 59, 59);
-      
+
       results = results.filter(log => {
         const logDate = new Date(log.timestamp);
         return logDate >= startDate && logDate <= endDate;
@@ -199,7 +199,7 @@ const AuditLogs = () => {
     } else if (filters.timeRange === "today") {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       results = results.filter(log => {
         const logDate = new Date(log.timestamp);
         return logDate >= today;
@@ -208,10 +208,10 @@ const AuditLogs = () => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       yesterday.setHours(0, 0, 0, 0);
-      
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       results = results.filter(log => {
         const logDate = new Date(log.timestamp);
         return logDate >= yesterday && logDate < today;
@@ -219,7 +219,7 @@ const AuditLogs = () => {
     } else if (filters.timeRange === "week") {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      
+
       results = results.filter(log => {
         const logDate = new Date(log.timestamp);
         return logDate >= weekAgo;
@@ -227,18 +227,18 @@ const AuditLogs = () => {
     } else if (filters.timeRange === "month") {
       const monthAgo = new Date();
       monthAgo.setMonth(monthAgo.getMonth() - 1);
-      
+
       results = results.filter(log => {
         const logDate = new Date(log.timestamp);
         return logDate >= monthAgo;
       });
     }
-    
+
     // Apply sorting
     results.sort((a, b) => {
       let comparison = 0;
-      
-      switch(sorting.field) {
+
+      switch (sorting.field) {
         case "timestamp":
           comparison = new Date(a.timestamp) - new Date(b.timestamp);
           break;
@@ -255,17 +255,17 @@ const AuditLogs = () => {
         default:
           comparison = new Date(a.timestamp) - new Date(b.timestamp);
       }
-      
+
       return sorting.direction === "asc" ? comparison : -comparison;
     });
-    
+
     setFilteredLogs(results);
     setPagination(prev => ({
       ...prev,
       totalPages: Math.ceil(results.length / prev.itemsPerPage),
       currentPage: 1
     }));
-    
+
     setLoading(false);
   }, [logs, searchTerm, filters, sorting]);
 
@@ -371,7 +371,7 @@ const AuditLogs = () => {
       <p className="mb-6 text-gray-600">
         Track all system activities and changes for security and compliance purposes.
       </p>
-      
+
       {/* Search and Quick Filters */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
@@ -395,7 +395,7 @@ const AuditLogs = () => {
               <FaFilter /> {showFilters ? "Hide Filters" : "Show Filters"}
             </button>
           </div>
-          
+
           <div className="flex items-center gap-2 w-full md:w-auto">
             <select
               className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-[#042E6F]"
@@ -410,11 +410,11 @@ const AuditLogs = () => {
               <option value="month">Last 30 Days</option>
               <option value="custom">Custom Range</option>
             </select>
-            
+
             <div className="dropdown relative">
               <button
                 className="bg-[#042E6F] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#021E47]"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <FaFileExport /> Export
               </button>
@@ -435,7 +435,7 @@ const AuditLogs = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Advanced Filters */}
         {showFilters && (
           <div className="mt-4 pt-4 border-t border-gray-200">
@@ -458,7 +458,7 @@ const AuditLogs = () => {
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   <FaCog className="inline mr-1" /> Action Type
@@ -477,7 +477,7 @@ const AuditLogs = () => {
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   <FaInfoCircle className="inline mr-1" /> Severity
@@ -495,7 +495,7 @@ const AuditLogs = () => {
                 </select>
               </div>
             </div>
-            
+
             {filters.timeRange === "custom" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -510,7 +510,7 @@ const AuditLogs = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#042E6F]"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     <FaCalendarAlt className="inline mr-1" /> End Date
@@ -525,7 +525,7 @@ const AuditLogs = () => {
                 </div>
               </div>
             )}
-            
+
             <div className="flex justify-end">
               <button
                 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 mr-2"
@@ -537,7 +537,7 @@ const AuditLogs = () => {
           </div>
         )}
       </div>
-      
+
       {/* Logs Table */}
       <div className="bg-white rounded-xl shadow-lg p-6 overflow-hidden">
         <div className="mb-4 flex justify-between items-center">
@@ -548,7 +548,7 @@ const AuditLogs = () => {
             Found <span className="font-semibold">{filteredLogs.length}</span> log entries
           </div>
         </div>
-        
+
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="loader animate-spin rounded-full h-12 w-12 border-4 border-[#042E6F] border-t-transparent"></div>
@@ -566,8 +566,8 @@ const AuditLogs = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("timestamp")}
                     >
@@ -576,8 +576,8 @@ const AuditLogs = () => {
                         <span className="ml-1">{getSortIcon("timestamp")}</span>
                       </div>
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("user")}
                     >
@@ -586,8 +586,8 @@ const AuditLogs = () => {
                         <span className="ml-1">{getSortIcon("user")}</span>
                       </div>
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("actionType")}
                     >
@@ -599,8 +599,8 @@ const AuditLogs = () => {
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Details
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("severity")}
                     >
@@ -639,7 +639,7 @@ const AuditLogs = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button 
+                        <button
                           className="text-[#042E6F] hover:text-[#021E47]"
                           onClick={() => setDetailModal(log)}
                           title="View Details"
@@ -652,7 +652,7 @@ const AuditLogs = () => {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
             <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
@@ -668,18 +668,17 @@ const AuditLogs = () => {
                     <button
                       onClick={() => changePage(pagination.currentPage - 1)}
                       disabled={pagination.currentPage === 1}
-                      className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
-                        pagination.currentPage === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                      }`}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${pagination.currentPage === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
+                        }`}
                     >
                       <span className="sr-only">Previous</span>
                       <FaChevronLeft className="h-5 w-5" />
                     </button>
-                    
+
                     {/* Page numbers */}
                     {Array.from({ length: Math.min(5, pagination.totalPages) }).map((_, i) => {
                       let pageNum;
-                      
+
                       // Calculate which page numbers to show
                       if (pagination.totalPages <= 5) {
                         pageNum = i + 1;
@@ -690,17 +689,16 @@ const AuditLogs = () => {
                       } else {
                         pageNum = pagination.currentPage - 2 + i;
                       }
-                      
+
                       if (pageNum > 0 && pageNum <= pagination.totalPages) {
                         return (
                           <button
                             key={i}
                             onClick={() => changePage(pageNum)}
-                            className={`relative inline-flex items-center px-4 py-2 border ${
-                              pagination.currentPage === pageNum
+                            className={`relative inline-flex items-center px-4 py-2 border ${pagination.currentPage === pageNum
                                 ? "z-10 bg-[#042E6F] border-[#042E6F] text-white"
                                 : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                            } text-sm font-medium`}
+                              } text-sm font-medium`}
                           >
                             {pageNum}
                           </button>
@@ -708,13 +706,12 @@ const AuditLogs = () => {
                       }
                       return null;
                     })}
-                    
+
                     <button
                       onClick={() => changePage(pagination.currentPage + 1)}
                       disabled={pagination.currentPage === pagination.totalPages}
-                      className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                        pagination.currentPage === pagination.totalPages ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                      }`}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${pagination.currentPage === pagination.totalPages ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
+                        }`}
                     >
                       <span className="sr-only">Next</span>
                       <FaChevronRight className="h-5 w-5" />
@@ -726,14 +723,14 @@ const AuditLogs = () => {
           </>
         )}
       </div>
-      
+
       {/* Log Detail Modal */}
       {detailModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
             <div className="bg-[#042E6F] text-white px-6 py-4 flex justify-between items-center">
               <h3 className="text-lg font-semibold">Audit Log Details</h3>
-              <button 
+              <button
                 onClick={() => setDetailModal(null)}
                 className="text-white hover:text-gray-200 text-xl"
               >
@@ -767,7 +764,7 @@ const AuditLogs = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="text-sm font-bold text-gray-500 uppercase mb-2">User & System Info</h4>
                   <div className="bg-gray-50 rounded-lg p-4">
@@ -790,9 +787,9 @@ const AuditLogs = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="border-t border-gray-200 pt-4 flex justify-end">
-                <button 
+                <button
                   className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
                   onClick={() => setDetailModal(null)}
                 >

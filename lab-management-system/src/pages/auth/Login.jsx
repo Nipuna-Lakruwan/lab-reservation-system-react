@@ -3,7 +3,7 @@
  */
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock, FaSignInAlt, FaUserPlus, FaKey } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -32,36 +32,29 @@ const Login = () => {
 
     // Simulate API call for authentication
     setTimeout(() => {
-      // For demo purposes - in real app you would verify with backend
-      if (credentials.email === "admin@example.com" && credentials.password === "password") {
-        // Set authentication state in localStorage for admin
+      const { email, password } = credentials;
+
+      // Demo authentication logic
+      if (email === "admin@example.com" && password === "password") {
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userRole", "admin");
-        localStorage.setItem("user", JSON.stringify({
-          name: "Admin User",
-          email: credentials.email,
-          role: "Admin"
-        }));
-
-        // Successful login - navigate to dashboard
+        localStorage.setItem("user", JSON.stringify({ name: "Admin User", email }));
         navigate("/");
-      } else if (credentials.email === "lecturer@example.com" && credentials.password === "password") {
-        // Set authentication state in localStorage for lecturer
+      } else if (email === "lecturer@example.com" && password === "password") {
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userRole", "lecturer");
-        localStorage.setItem("user", JSON.stringify({
-          name: "Dr. Sarah Johnson",
-          email: credentials.email,
-          role: "Lecturer"
-        }));
-
-        // Successful login - navigate to lecturer dashboard
+        localStorage.setItem("user", JSON.stringify({ name: "Dr. Sarah Johnson", email }));
         navigate("/lecturer");
+      } else if (email === "student@example.com" && password === "password") {
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userRole", "student");
+        localStorage.setItem("user", JSON.stringify({ name: "John Smith", email }));
+        navigate("/student");
       } else {
-        // Failed login
         setError("Invalid email or password. Please try again.");
-        setLoading(false);
       }
+      
+      setLoading(false);
     }, 1500);
   };
 
@@ -71,11 +64,8 @@ const Login = () => {
 
     // Simulate API call for password reset
     setTimeout(() => {
-      setLoading(false);
       setResetSent(true);
-
-      // In a real application, this would send a reset email
-      console.log(`Password reset requested for: ${resetEmail}`);
+      setLoading(false);
     }, 1500);
   };
 
@@ -92,39 +82,41 @@ const Login = () => {
             />
             <h2 className="mt-4 text-3xl font-bold text-[#042E6F]">Reset Password</h2>
             <p className="mt-2 text-sm text-gray-600">
-              {resetSent
-                ? "Check your email for password reset instructions"
-                : "Enter your email address and we'll send you a link to reset your password."}
+              Enter your email address to receive a password reset link
             </p>
           </div>
 
           {resetSent ? (
-            <div className="mt-8 space-y-6">
-              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-                <p className="text-green-700 text-sm">
-                  Password reset link has been sent to your email address. Please check your inbox and follow the instructions.
+            <div className="mt-8 text-center">
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-6">
+                <p className="text-green-700">
+                  Password reset link has been sent to your email.
                 </p>
               </div>
-
               <button
-                onClick={() => setForgotPassword(false)}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-md text-white font-medium bg-[#042E6F] hover:bg-[#021E47] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#042E6F] transition duration-150"
+                onClick={() => {
+                  setForgotPassword(false);
+                  setResetSent(false);
+                }}
+                className="text-[#042E6F] hover:underline"
               >
-                Return to Login
+                Return to login
               </button>
             </div>
           ) : (
             <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
               <div className="rounded-md -space-y-px">
                 <div className="mb-4">
-                  <label htmlFor="reset-email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                  <label htmlFor="reset-email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <FaEnvelope className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       id="reset-email"
-                      name="email"
+                      name="reset-email"
                       type="email"
                       autoComplete="email"
                       required
@@ -137,39 +129,21 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col space-y-3">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-md text-white font-medium ${loading ? "bg-blue-400" : "bg-[#042E6F] hover:bg-[#021E47]"
-                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#042E6F] transition duration-150`}
-                >
-                  {loading ? (
-                    <>
-                      <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      </span>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                        <FaKey className="h-5 w-5 text-white" />
-                      </span>
-                      Send Reset Link
-                    </>
-                  )}
-                </button>
-
+              <div className="flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setForgotPassword(false)}
-                  className="text-[#042E6F] hover:underline text-center"
+                  className="text-[#042E6F] hover:underline"
                 >
-                  Back to Login
+                  Back to login
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`group relative flex justify-center py-2 px-4 border border-transparent rounded-md text-white font-medium ${loading ? "bg-blue-400" : "bg-[#042E6F] hover:bg-[#021E47]"
+                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#042E6F] transition duration-150`}
+                >
+                  {loading ? "Sending..." : "Send Reset Link"}
                 </button>
               </div>
             </form>
@@ -304,7 +278,6 @@ const Login = () => {
           </div>
         </form>
 
-        {/* Development helper - remove in production */}
         <div className="mt-8 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">Development Credentials</p>
           <div className="mt-2 bg-gray-50 p-3 rounded-lg text-xs">
@@ -313,9 +286,14 @@ const Login = () => {
               <p><strong>Email:</strong> admin@example.com</p>
               <p><strong>Password:</strong> password</p>
             </div>
-            <div>
+            <div className="mb-2">
               <p className="font-semibold">Lecturer Login:</p>
               <p><strong>Email:</strong> lecturer@example.com</p>
+              <p><strong>Password:</strong> password</p>
+            </div>
+            <div>
+              <p className="font-semibold">Student Login:</p>
+              <p><strong>Email:</strong> student@example.com</p>
               <p><strong>Password:</strong> password</p>
             </div>
           </div>

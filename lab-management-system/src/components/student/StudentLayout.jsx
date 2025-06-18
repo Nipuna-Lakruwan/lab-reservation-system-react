@@ -2,10 +2,10 @@
  * Copyright (c) 2025 Nipuna Lakruwan
  */
 import React, { useState, useEffect, useRef } from "react";
-import LecturerSidebar from "./LecturerSidebar";
-import LecturerHeader from "./LecturerHeader";
+import StudentHeader from "./StudentHeader";
+import StudentSidebar from "./StudentSidebar";
 
-const LecturerLayout = ({ children }) => {
+const StudentLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const mainContentRef = useRef(null);
@@ -26,33 +26,34 @@ const LecturerLayout = ({ children }) => {
   // Handle clicks outside the sidebar to close it (only on mobile)
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (isMobile && sidebarOpen && mainContentRef.current &&
-        !mainContentRef.current.contains(e.target) &&
-        !e.target.closest('.sidebar')) {
+      if (
+        isMobile &&
+        sidebarOpen &&
+        mainContentRef.current &&
+        mainContentRef.current.contains(e.target)
+      ) {
         setSidebarOpen(false);
       }
     };
 
     if (isMobile) {
       document.addEventListener('mousedown', handleOutsideClick);
-      document.addEventListener('touchstart', handleOutsideClick);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('touchstart', handleOutsideClick);
     };
   }, [isMobile, sidebarOpen]);
 
   return (
     <div className="dashboard-layout flex min-h-screen bg-[#f8f9fa]">
-      <LecturerSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <StudentSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div
         className={`main-content flex-1 transition-all duration-300 ${sidebarOpen && !isMobile ? "ml-[260px]" : "ml-0"}`}
         ref={mainContentRef}
       >
-        <LecturerHeader onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} isMobile={isMobile} />
+        <StudentHeader onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         <main className="p-4 md:p-6">
           {children}
         </main>
@@ -70,4 +71,4 @@ const LecturerLayout = ({ children }) => {
   );
 };
 
-export default LecturerLayout;
+export default StudentLayout;

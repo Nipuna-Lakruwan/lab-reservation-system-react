@@ -2,16 +2,16 @@
  * Copyright (c) 2025 Nipuna Lakruwan
  */
 import React, { useState, useRef, useEffect } from "react";
-import { 
-  FaCog, FaCalendarAlt, FaBell, FaUser, FaShieldAlt, FaInfoCircle, 
-  FaUpload, FaTrashAlt, FaQuestionCircle, FaSync, FaSave, 
+import {
+  FaCog, FaCalendarAlt, FaBell, FaUser, FaShieldAlt, FaInfoCircle,
+  FaUpload, FaTrashAlt, FaQuestionCircle, FaSync, FaSave,
   FaCheck, FaExclamationTriangle, FaTimes
 } from "react-icons/fa";
 
 const Settings = () => {
   // Active tab state
   const [activeTab, setActiveTab] = useState("general");
-  
+
   // Form states for each settings section
   const [generalSettings, setGeneralSettings] = useState({
     systemName: "Lab Reservation System",
@@ -21,7 +21,7 @@ const Settings = () => {
     timeFormat: "12",
     academicYearStart: "9"
   });
-  
+
   const [reservationSettings, setReservationSettings] = useState({
     requireApprovalStudents: true,
     requireApprovalLecturers: false,
@@ -31,7 +31,7 @@ const Settings = () => {
     allowCancellationAfterStart: false,
     cancellationTimeLimit: 24
   });
-  
+
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     browserNotifications: true,
@@ -39,7 +39,7 @@ const Settings = () => {
     reminderTime: 2,
     systemEmail: "no-reply@labreservation.edu"
   });
-  
+
   const [profileSettings, setProfileSettings] = useState({
     name: "Admin User",
     email: "admin@example.com",
@@ -48,7 +48,7 @@ const Settings = () => {
     title: "Department Coordinator",
     profileImage: "/assets/img/default-user.png"
   });
-  
+
   const [securitySettings, setSecuritySettings] = useState({
     currentPassword: "",
     newPassword: "",
@@ -56,26 +56,26 @@ const Settings = () => {
     enable2FA: false,
     sessionTimeout: 30
   });
-  
+
   // File input ref for profile image upload
   const fileInputRef = useRef(null);
-  
+
   // Loading and success states for form submissions
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeForm, setActiveForm] = useState(null);
-  
+
   // Password strength
   const [passwordStrength, setPasswordStrength] = useState({
     score: 0,
     text: "Password strength"
   });
-  
+
   // Handle tab changes
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-  
+
   // Handle form input changes
   const handleGeneralChange = (e) => {
     const { id, value } = e.target;
@@ -84,7 +84,7 @@ const Settings = () => {
       [id.replace('general-', '')]: value
     }));
   };
-  
+
   const handleReservationChange = (e) => {
     const { id, value, type, checked } = e.target;
     const fieldName = id.replace('reservation-', '');
@@ -93,7 +93,7 @@ const Settings = () => {
       [fieldName]: type === 'checkbox' ? checked : value
     }));
   };
-  
+
   const handleNotificationChange = (e) => {
     const { id, value, type, checked } = e.target;
     const fieldName = id.replace('notification-', '');
@@ -102,7 +102,7 @@ const Settings = () => {
       [fieldName]: type === 'checkbox' ? checked : value
     }));
   };
-  
+
   const handleProfileChange = (e) => {
     const { id, value } = e.target;
     setProfileSettings(prev => ({
@@ -110,22 +110,22 @@ const Settings = () => {
       [id.replace('profile-', '')]: value
     }));
   };
-  
+
   const handleSecurityChange = (e) => {
     const { id, value, type, checked } = e.target;
     const fieldName = id.replace('security-', '');
-    
+
     setSecuritySettings(prev => ({
       ...prev,
       [fieldName]: type === 'checkbox' ? checked : value
     }));
-    
+
     // Calculate password strength if password field changes
     if (id === 'security-newPassword') {
       calculatePasswordStrength(value);
     }
   };
-  
+
   // Handle profile image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -140,7 +140,7 @@ const Settings = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   // Handle profile image removal
   const handleRemoveImage = () => {
     setProfileSettings(prev => ({
@@ -151,37 +151,37 @@ const Settings = () => {
       fileInputRef.current.value = '';
     }
   };
-  
+
   // Calculate password strength
   const calculatePasswordStrength = (password) => {
     // Simple password strength calculation logic
     let score = 0;
     let text = "Very weak";
-    
+
     if (!password) {
       setPasswordStrength({ score: 0, text: "Password strength" });
       return;
     }
-    
+
     // Length check
     if (password.length >= 8) score += 1;
     if (password.length >= 12) score += 1;
-    
+
     // Complexity checks
     if (/[A-Z]/.test(password)) score += 1;
     if (/[0-9]/.test(password)) score += 1;
     if (/[^A-Za-z0-9]/.test(password)) score += 1;
-    
+
     // Determine text based on score
     if (score === 1) text = "Weak";
     else if (score === 2) text = "Fair";
     else if (score === 3) text = "Good";
     else if (score === 4) text = "Strong";
     else if (score === 5) text = "Very strong";
-    
+
     setPasswordStrength({ score, text });
   };
-  
+
   // Reset form functions
   const resetGeneralSettings = () => {
     setGeneralSettings({
@@ -193,7 +193,7 @@ const Settings = () => {
       academicYearStart: "9"
     });
   };
-  
+
   const resetReservationSettings = () => {
     setReservationSettings({
       requireApprovalStudents: true,
@@ -205,7 +205,7 @@ const Settings = () => {
       cancellationTimeLimit: 24
     });
   };
-  
+
   const resetNotificationSettings = () => {
     setNotificationSettings({
       emailNotifications: true,
@@ -215,7 +215,7 @@ const Settings = () => {
       systemEmail: "no-reply@labreservation.edu"
     });
   };
-  
+
   const resetProfileSettings = () => {
     setProfileSettings({
       name: "Admin User",
@@ -229,7 +229,7 @@ const Settings = () => {
       fileInputRef.current.value = '';
     }
   };
-  
+
   const resetSecuritySettings = () => {
     setSecuritySettings({
       currentPassword: "",
@@ -240,13 +240,13 @@ const Settings = () => {
     });
     setPasswordStrength({ score: 0, text: "Password strength" });
   };
-  
+
   // Form submission handlers
   const handleFormSubmit = (formName, e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setActiveForm(formName);
-    
+
     // In a real system, this would make API calls to save the settings
     setTimeout(() => {
       setIsSubmitting(false);
@@ -257,18 +257,18 @@ const Settings = () => {
       }, 3000);
     }, 1500);
   };
-  
+
   // Clear success message when tab changes
   useEffect(() => {
     setSubmitSuccess(false);
     setActiveForm(null);
   }, [activeTab]);
-  
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-[#042E6F] mb-2">System Settings</h1>
       <p className="mb-6 text-gray-600">Configure system behavior and customize your experience.</p>
-      
+
       {/* Settings Introduction Card */}
       <div className="bg-blue-50 rounded-xl shadow-lg p-6 border-l-4 border-[#042E6F] mb-8 flex items-start">
         <div className="text-[#042E6F] text-3xl mr-4">
@@ -281,7 +281,7 @@ const Settings = () => {
           </p>
         </div>
       </div>
-      
+
       {/* Tabs Container */}
       <div className="tabs-container">
         {/* Tab Buttons */}
@@ -317,7 +317,7 @@ const Settings = () => {
             <FaShieldAlt className="mr-2" /> Security Settings
           </button>
         </div>
-        
+
         {/* Tab Content */}
         <div className="tab-content bg-white rounded-lg shadow-lg p-8 border border-gray-200 mb-8">
           {/* General Settings Tab */}
@@ -328,7 +328,7 @@ const Settings = () => {
             <p className="text-gray-600 mb-6">
               Configure basic system settings like names, date formats, and timezones.
             </p>
-            
+
             <form onSubmit={(e) => handleFormSubmit("general", e)} className="max-w-2xl">
               <div className="mb-6">
                 <label htmlFor="general-systemName" className="block font-medium mb-2 text-gray-700">System Name</label>
@@ -342,7 +342,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">The name displayed in the header and browser tab</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="general-institutionName" className="block font-medium mb-2 text-gray-700">Institution Name</label>
                 <input
@@ -355,7 +355,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Your organization or institution's name</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="general-timezone" className="block font-medium mb-2 text-gray-700">System Timezone</label>
                 <select
@@ -393,7 +393,7 @@ const Settings = () => {
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Timezone used for all dates and times in the system</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="general-dateFormat" className="block font-medium mb-2 text-gray-700">Date Format</label>
                 <select
@@ -410,7 +410,7 @@ const Settings = () => {
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Format for displaying dates throughout the system</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="general-timeFormat" className="block font-medium mb-2 text-gray-700">Time Format</label>
                 <select
@@ -425,7 +425,7 @@ const Settings = () => {
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Format for displaying times throughout the system</p>
               </div>
-              
+
               <div className="mb-8">
                 <label htmlFor="general-academicYearStart" className="block font-medium mb-2 text-gray-700">Academic Year Start Month</label>
                 <select
@@ -450,7 +450,7 @@ const Settings = () => {
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Month when your academic year begins (affects reports and statistics)</p>
               </div>
-              
+
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
@@ -476,7 +476,7 @@ const Settings = () => {
                   )}
                 </button>
               </div>
-              
+
               {submitSuccess && activeForm === "general" && (
                 <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex items-center">
                   <FaCheck className="mr-2" /> General settings saved successfully!
@@ -484,7 +484,7 @@ const Settings = () => {
               )}
             </form>
           </div>
-          
+
           {/* Reservation Settings Tab */}
           <div className={activeTab === "reservations" ? "block" : "hidden"}>
             <h2 className="text-xl font-bold text-[#042E6F] flex items-center mb-4">
@@ -493,14 +493,14 @@ const Settings = () => {
             <p className="text-gray-600 mb-6">
               Configure how lab reservations work, including approval requirements and time limits.
             </p>
-            
+
             <form onSubmit={(e) => handleFormSubmit("reservations", e)} className="max-w-2xl">
               {/* Approval Requirements Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-[#042E6F] mb-4 pb-2 border-b border-gray-200">
                   Approval Requirements
                 </h3>
-                
+
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -527,7 +527,7 @@ const Settings = () => {
                     </label>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -555,13 +555,13 @@ const Settings = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Time Restrictions Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-[#042E6F] mb-4 pb-2 border-b border-gray-200">
                   Time Restrictions
                 </h3>
-                
+
                 <div className="mb-4">
                   <label htmlFor="reservation-maxReservationDaysAhead" className="block font-medium mb-2 text-gray-700">
                     Maximum Days in Advance for Reservations
@@ -581,7 +581,7 @@ const Settings = () => {
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Number of days in advance users can make reservations (1-365)</p>
                 </div>
-                
+
                 <div className="mb-4">
                   <label htmlFor="reservation-maxReservationDuration" className="block font-medium mb-2 text-gray-700">
                     Maximum Reservation Duration
@@ -601,7 +601,7 @@ const Settings = () => {
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Maximum hours a single reservation can last (1-12)</p>
                 </div>
-                
+
                 <div className="mb-4">
                   <label htmlFor="reservation-maxWeeklyReservations" className="block font-medium mb-2 text-gray-700">
                     Maximum Weekly Reservations per User
@@ -622,13 +622,13 @@ const Settings = () => {
                   <p className="text-sm text-gray-500 mt-1">Maximum number of reservations a user can have per week (1-20)</p>
                 </div>
               </div>
-              
+
               {/* Cancellation Policy Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-[#042E6F] mb-4 pb-2 border-b border-gray-200">
                   Cancellation Policy
                 </h3>
-                
+
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -655,7 +655,7 @@ const Settings = () => {
                     </label>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <label htmlFor="reservation-cancellationTimeLimit" className="block font-medium mb-2 text-gray-700">
                     Cancellation Time Limit
@@ -675,7 +675,7 @@ const Settings = () => {
                   <p className="text-sm text-gray-500 mt-1">Time before the reservation start time when cancellation is no longer allowed (1-48 hours)</p>
                 </div>
               </div>
-              
+
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
@@ -701,7 +701,7 @@ const Settings = () => {
                   )}
                 </button>
               </div>
-              
+
               {submitSuccess && activeForm === "reservations" && (
                 <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex items-center">
                   <FaCheck className="mr-2" /> Reservation settings saved successfully!
@@ -709,7 +709,7 @@ const Settings = () => {
               )}
             </form>
           </div>
-          
+
           {/* Notification Settings Tab */}
           <div className={activeTab === "notifications" ? "block" : "hidden"}>
             <h2 className="text-xl font-bold text-[#042E6F] flex items-center mb-4">
@@ -718,7 +718,7 @@ const Settings = () => {
             <p className="text-gray-600 mb-6">
               Manage how you receive notifications about reservations and system updates.
             </p>
-            
+
             <form onSubmit={(e) => handleFormSubmit("notifications", e)} className="max-w-2xl">
               <div className="mb-6">
                 <label htmlFor="notification-emailNotifications" className="flex items-center gap-2 font-medium mb-4">
@@ -736,7 +736,7 @@ const Settings = () => {
                     Receive email notifications
                   </div>
                 </label>
-                
+
                 <div className="pl-8 mb-4">
                   <label htmlFor="notification-systemEmail" className="block font-medium mb-2 text-gray-700">System Email Address</label>
                   <input
@@ -749,7 +749,7 @@ const Settings = () => {
                   />
                   <p className="text-sm text-gray-500 mt-1">Email address used for sending notifications (e.g. no-reply@labreservation.edu)</p>
                 </div>
-                
+
                 <div className="pl-8 mb-4">
                   <label htmlFor="notification-reminderTime" className="block font-medium mb-2 text-gray-700">Reservation Reminder Time</label>
                   <div className="flex items-center">
@@ -768,7 +768,7 @@ const Settings = () => {
                   <p className="text-sm text-gray-500 mt-1">How many hours before a reservation starts should the reminder be sent?</p>
                 </div>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="notification-browserNotifications" className="flex items-center gap-2 font-medium mb-4">
                   <input
@@ -785,15 +785,15 @@ const Settings = () => {
                     Enable browser notifications
                   </div>
                 </label>
-                
+
                 <div className="pl-8">
                   <p className="text-sm text-gray-500 mb-4">
-                    Browser notifications let you receive alerts even when the system is not open. 
+                    Browser notifications let you receive alerts even when the system is not open.
                     <a href="#" className="text-[#042E6F] hover:underline"> Learn more</a>
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
@@ -819,7 +819,7 @@ const Settings = () => {
                   )}
                 </button>
               </div>
-              
+
               {submitSuccess && activeForm === "notifications" && (
                 <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex items-center">
                   <FaCheck className="mr-2" /> Notification settings saved successfully!
@@ -827,7 +827,7 @@ const Settings = () => {
               )}
             </form>
           </div>
-          
+
           {/* Profile Settings Tab */}
           <div className={activeTab === "profile" ? "block" : "hidden"}>
             <h2 className="text-xl font-bold text-[#042E6F] flex items-center mb-4">
@@ -836,7 +836,7 @@ const Settings = () => {
             <p className="text-gray-600 mb-6">
               Update your profile information and change your password.
             </p>
-            
+
             <form onSubmit={(e) => handleFormSubmit("profile", e)} className="max-w-2xl">
               <div className="mb-6">
                 <label htmlFor="profile-name" className="block font-medium mb-2 text-gray-700">Full Name</label>
@@ -850,7 +850,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Your full name as displayed in the system</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-email" className="block font-medium mb-2 text-gray-700">Email Address</label>
                 <input
@@ -863,7 +863,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Your email address for login and notifications</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-phone" className="block font-medium mb-2 text-gray-700">Phone Number</label>
                 <input
@@ -875,7 +875,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Optional: Your phone number for contact purposes</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-department" className="block font-medium mb-2 text-gray-700">Department</label>
                 <input
@@ -887,7 +887,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Optional: Your department or section</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-title" className="block font-medium mb-2 text-gray-700">Job Title</label>
                 <input
@@ -899,7 +899,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Optional: Your job title or position</p>
               </div>
-              
+
               <div className="mb-6">
                 <label className="block font-medium mb-2 text-gray-700">Profile Image</label>
                 <div className="flex items-center">
@@ -928,7 +928,7 @@ const Settings = () => {
                 </div>
                 <p className="text-sm text-gray-500 mt-2">Recommended size: 256x256px. Max size: 2MB.</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-currentPassword" className="block font-medium mb-2 text-gray-700">Current Password</label>
                 <input
@@ -940,7 +940,7 @@ const Settings = () => {
                   required
                 />
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="profile-newPassword" className="block font-medium mb-2 text-gray-700">New Password</label>
                 <input
@@ -953,7 +953,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Leave blank to keep current password</p>
               </div>
-              
+
               <div className="mb-8">
                 <label htmlFor="profile-confirmPassword" className="block font-medium mb-2 text-gray-700">Confirm New Password</label>
                 <input
@@ -966,7 +966,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Re-enter new password to confirm</p>
               </div>
-              
+
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
@@ -999,7 +999,7 @@ const Settings = () => {
                   )}
                 </button>
               </div>
-              
+
               {submitSuccess && activeForm === "profile" && (
                 <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex items-center">
                   <FaCheck className="mr-2" /> Profile settings saved successfully!
@@ -1007,7 +1007,7 @@ const Settings = () => {
               )}
             </form>
           </div>
-          
+
           {/* Security Settings Tab */}
           <div className={activeTab === "security" ? "block" : "hidden"}>
             <h2 className="text-xl font-bold text-[#042E6F] flex items-center mb-4">
@@ -1016,7 +1016,7 @@ const Settings = () => {
             <p className="text-gray-600 mb-6">
               Enhance the security of your account and manage session settings.
             </p>
-            
+
             <form onSubmit={(e) => handleFormSubmit("security", e)} className="max-w-2xl">
               <div className="mb-6">
                 <label htmlFor="security-currentPassword" className="block font-medium mb-2 text-gray-700">Current Password</label>
@@ -1029,7 +1029,7 @@ const Settings = () => {
                   required
                 />
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="security-newPassword" className="block font-medium mb-2 text-gray-700">New Password</label>
                 <input
@@ -1042,7 +1042,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Leave blank to keep current password</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="security-confirmPassword" className="block font-medium mb-2 text-gray-700">Confirm New Password</label>
                 <input
@@ -1055,7 +1055,7 @@ const Settings = () => {
                 />
                 <p className="text-sm text-gray-500 mt-1">Re-enter new password to confirm</p>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="security-enable2FA" className="flex items-center gap-2 font-medium mb-4">
                   <input
@@ -1072,14 +1072,14 @@ const Settings = () => {
                     Enable Two-Factor Authentication (2FA)
                   </div>
                 </label>
-                
+
                 <div className="pl-8 mb-4">
                   <p className="text-sm text-gray-500">
                     Add an extra layer of security by requiring a verification code in addition to your password
                   </p>
                 </div>
               </div>
-              
+
               <div className="mb-4">
                 <label htmlFor="security-sessionTimeout" className="block font-medium mb-2 text-gray-700">Session Timeout</label>
                 <div className="flex items-center">
@@ -1096,7 +1096,7 @@ const Settings = () => {
                 </div>
                 <p className="text-sm text-gray-500 mt-1">Time of inactivity before automatic logout (5-180 minutes)</p>
               </div>
-              
+
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
@@ -1122,7 +1122,7 @@ const Settings = () => {
                   )}
                 </button>
               </div>
-              
+
               {submitSuccess && activeForm === "security" && (
                 <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex items-center">
                   <FaCheck className="mr-2" /> Security settings updated successfully!
@@ -1173,14 +1173,14 @@ const Settings = () => {
               <button
                 type="button"
                 className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 className="px-6 py-2 bg-[#042E6F] text-white rounded-lg hover:bg-[#021E47] transition"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Verify and Enable
               </button>

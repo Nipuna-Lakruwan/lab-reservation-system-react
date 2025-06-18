@@ -2,24 +2,24 @@
  * Copyright (c) 2025 Nipuna Lakruwan
  */
 import React, { useState, useEffect } from "react";
-import { 
-  FaCalendarAlt, FaClock, FaFlask, FaBook, FaUsers, FaInfoCircle, 
-  FaCheckCircle, FaArrowLeft, FaArrowRight, FaClipboardCheck, 
+import {
+  FaCalendarAlt, FaClock, FaFlask, FaBook, FaUsers, FaInfoCircle,
+  FaCheckCircle, FaArrowLeft, FaArrowRight, FaClipboardCheck,
   FaMapMarkerAlt, FaDesktop, FaTv, FaChair, FaSearch,
   FaChevronLeft, FaChevronRight, FaCalendarCheck
 } from "react-icons/fa";
 
 // Enhanced lab data with more details and images
 const labs = [
-  { 
-    id: 1, 
-    name: "Physics Lab", 
-    capacity: 30, 
+  {
+    id: 1,
+    name: "Physics Lab",
+    capacity: 30,
     available: true,
     location: "Science Building, Floor 2, Room 201",
     description: "Fully equipped physics laboratory with equipment for mechanics, electricity, magnetism, and optics experiments.",
     image: "https://images.unsplash.com/photo-1576153192621-7a3be10b356e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    equipment: ["Oscilloscope", "Wave Generator", "Optical Bench", "Force Sensors", "Electrical Circuit Components"], 
+    equipment: ["Oscilloscope", "Wave Generator", "Optical Bench", "Force Sensors", "Electrical Circuit Components"],
     features: ["Smart Board", "Individual Workstations", "Safety Equipment"],
     availableTimes: [
       { date: "2025-06-25", slots: ["09:00-11:00", "13:00-15:00", "15:00-17:00"] },
@@ -40,15 +40,15 @@ const labs = [
       }
     }
   },
-  { 
-    id: 2, 
-    name: "Chemistry Lab", 
-    capacity: 24, 
+  {
+    id: 2,
+    name: "Chemistry Lab",
+    capacity: 24,
     available: true,
     location: "Science Building, Floor 1, Room 105",
     description: "Modern chemistry laboratory with fume hoods and specialized equipment for organic and inorganic chemistry experiments.",
     image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    equipment: ["Fume Hood", "Analytical Balance", "Centrifuge", "Spectrometer", "pH Meters"], 
+    equipment: ["Fume Hood", "Analytical Balance", "Centrifuge", "Spectrometer", "pH Meters"],
     features: ["Chemical Storage", "Emergency Shower", "Eye Wash Stations"],
     availableTimes: [
       { date: "2025-06-25", slots: ["09:00-11:00", "11:00-13:00"] },
@@ -69,15 +69,15 @@ const labs = [
       }
     }
   },
-  { 
-    id: 3, 
-    name: "Computer Lab A", 
-    capacity: 40, 
+  {
+    id: 3,
+    name: "Computer Lab A",
+    capacity: 40,
     available: true,
     location: "Technology Building, Floor 3, Room 302",
     description: "High-performance computing lab with the latest hardware and software for programming, networking, and multimedia development.",
     image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    equipment: ["Desktop Computers", "Projector", "Networking Equipment", "Development Software", "3D Printers"], 
+    equipment: ["Desktop Computers", "Projector", "Networking Equipment", "Development Software", "3D Printers"],
     features: ["High-Speed Internet", "Dual Monitors", "Specialized Software"],
     availableTimes: [
       { date: "2025-06-25", slots: ["11:00-13:00", "13:00-15:00"] },
@@ -98,15 +98,15 @@ const labs = [
       }
     }
   },
-  { 
-    id: 4, 
-    name: "Computer Lab B", 
-    capacity: 35, 
+  {
+    id: 4,
+    name: "Computer Lab B",
+    capacity: 35,
     available: false,
     location: "Technology Building, Floor 3, Room 305",
     description: "Specialized lab for VR development, 3D modeling, and advanced computing applications.",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    equipment: ["Desktop Computers", "3D Printer", "VR Equipment", "Graphics Tablets", "Audio Equipment"], 
+    equipment: ["Desktop Computers", "3D Printer", "VR Equipment", "Graphics Tablets", "Audio Equipment"],
     features: ["Adjustable Workstations", "Collaboration Areas", "Development Tools"],
     availableTimes: [],
     // New calendar availability data
@@ -114,24 +114,24 @@ const labs = [
       "2025-06": {
         available: [],
         booked: [],
-        unavailable: Array.from({length: 30}, (_, i) => i + 1) // All days unavailable
+        unavailable: Array.from({ length: 30 }, (_, i) => i + 1) // All days unavailable
       },
       "2025-07": {
         available: [],
         booked: [],
-        unavailable: Array.from({length: 31}, (_, i) => i + 1) // All days unavailable
+        unavailable: Array.from({ length: 31 }, (_, i) => i + 1) // All days unavailable
       }
     }
   },
-  { 
-    id: 5, 
-    name: "Research Laboratory", 
-    capacity: 15, 
+  {
+    id: 5,
+    name: "Research Laboratory",
+    capacity: 15,
     available: true,
     location: "Research Building, Floor 1, Room 105",
     description: "Advanced research facility with specialized equipment for in-depth scientific studies and experiments.",
     image: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-    equipment: ["Electron Microscope", "DNA Sequencer", "Thermal Cycler", "Research Computers", "Data Analysis Tools"], 
+    equipment: ["Electron Microscope", "DNA Sequencer", "Thermal Cycler", "Research Computers", "Data Analysis Tools"],
     features: ["Quiet Environment", "Research Stations", "Conference Area"],
     availableTimes: [
       { date: "2025-06-25", slots: ["09:00-13:00", "14:00-17:00"] },
@@ -189,15 +189,15 @@ const RequestReservation = () => {
     equipment: [],
     additionalInfo: ""
   });
-  
+
   // New state for calendar view
   const [currentMonth, setCurrentMonth] = useState("2025-06");
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimeForMultipleDays, setSelectedTimeForMultipleDays] = useState("");
   const [calendarView, setCalendarView] = useState(false);
-  
+
   // Filter labs based on search query
-  const filteredLabs = labs.filter(lab => 
+  const filteredLabs = labs.filter(lab =>
     lab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     lab.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -288,9 +288,9 @@ const RequestReservation = () => {
   // Validate form before submission
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.course) newErrors.course = "Please select a course";
-    
+
     if (!formData.studentCount) {
       newErrors.studentCount = "Please enter expected student count";
     } else if (parseInt(formData.studentCount) <= 0) {
@@ -298,11 +298,11 @@ const RequestReservation = () => {
     } else if (selectedLab && parseInt(formData.studentCount) > selectedLab.capacity) {
       newErrors.studentCount = `Maximum capacity for this lab is ${selectedLab.capacity}`;
     }
-    
+
     if (!formData.purpose || formData.purpose.trim().length < 10) {
       newErrors.purpose = "Please provide a purpose (at least 10 characters)";
     }
-    
+
     // For calendar view, validate multiple dates
     if (calendarView && selectedDates.length === 0) {
       newErrors.dates = "Please select at least one date";
@@ -311,7 +311,7 @@ const RequestReservation = () => {
     if (calendarView && !selectedTimeForMultipleDays) {
       newErrors.time = "Please select a time slot";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -319,36 +319,36 @@ const RequestReservation = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     // Create the final reservation data
-    const reservationData = calendarView 
+    const reservationData = calendarView
       ? {
-          lab: selectedLab.id,
-          labName: selectedLab.name,
-          dates: selectedDates,
-          time: selectedTimeForMultipleDays,
-          ...formData
-        }
+        lab: selectedLab.id,
+        labName: selectedLab.name,
+        dates: selectedDates,
+        time: selectedTimeForMultipleDays,
+        ...formData
+      }
       : {
-          lab: selectedLab.id,
-          labName: selectedLab.name,
-          date: selectedDate,
-          time: selectedTime,
-          ...formData
-        };
-    
+        lab: selectedLab.id,
+        labName: selectedLab.name,
+        date: selectedDate,
+        time: selectedTime,
+        ...formData
+      };
+
     // Simulate API call to submit reservation request
     setTimeout(() => {
       console.log("Submitting reservation request:", reservationData);
       setIsSubmitting(false);
       setSubmitSuccess(true);
-      
+
       // Reset form after successful submission
       setTimeout(() => {
         setSelectedLab(null);
@@ -399,15 +399,15 @@ const RequestReservation = () => {
   // New function to handle calendar date selection
   const handleCalendarDateSelect = (day) => {
     if (!selectedLab) return;
-    
+
     const monthKey = currentMonth;
     const availability = selectedLab.calendarAvailability[monthKey];
-    
+
     // Check if the day is available
     if (availability && availability.available.includes(day)) {
       setSelectedDates(prev => {
         const dateString = `${currentMonth}-${day.toString().padStart(2, '0')}`;
-        
+
         if (prev.includes(dateString)) {
           return prev.filter(d => d !== dateString);
         } else {
@@ -420,10 +420,10 @@ const RequestReservation = () => {
   // New function to handle month navigation
   const navigateMonth = (direction) => {
     const [year, month] = currentMonth.split('-').map(Number);
-    
+
     let newYear = year;
     let newMonth = month + direction;
-    
+
     if (newMonth > 12) {
       newMonth = 1;
       newYear += 1;
@@ -431,7 +431,7 @@ const RequestReservation = () => {
       newMonth = 12;
       newYear -= 1;
     }
-    
+
     setCurrentMonth(`${newYear}-${newMonth.toString().padStart(2, '0')}`);
   };
 
@@ -447,14 +447,14 @@ const RequestReservation = () => {
   // New function to get day status color for calendar
   const getDayStatusColor = (day) => {
     if (!selectedLab || !currentMonth) return "bg-gray-100 text-gray-400 cursor-not-allowed opacity-50";
-    
+
     const monthKey = currentMonth;
     const availability = selectedLab.calendarAvailability[monthKey];
-    
+
     if (!availability) return "bg-gray-100 text-gray-400 cursor-not-allowed opacity-50";
-    
+
     const dateString = `${currentMonth}-${day.toString().padStart(2, '0')}`;
-    
+
     if (selectedDates.includes(dateString)) {
       return "bg-[#042E6F] text-white font-bold";
     } else if (availability.booked.includes(day)) {
@@ -464,31 +464,31 @@ const RequestReservation = () => {
     } else if (availability.available.includes(day)) {
       return "bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer";
     }
-    
+
     return "bg-gray-100 text-gray-400 cursor-not-allowed";
   };
 
   // Generate calendar for selected month
   const generateCalendar = () => {
     if (!currentMonth) return [];
-    
+
     const [year, month] = currentMonth.split('-').map(Number);
     const firstDay = new Date(year, month - 1, 1).getDay(); // 0 = Sunday, 1 = Monday, etc.
     const daysInMonth = new Date(year, month, 0).getDate();
-    
+
     // Create array for days in month plus empty slots for first week
     const calendar = [];
-    
+
     // Add empty slots for first week
     for (let i = 0; i < firstDay; i++) {
       calendar.push(null);
     }
-    
+
     // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       calendar.push(day);
     }
-    
+
     return calendar;
   };
 
@@ -511,7 +511,7 @@ const RequestReservation = () => {
     return (
       <div>
         <h2 className="text-xl font-bold text-[#042E6F] mb-4">Step 1: Select a Lab</h2>
-        
+
         {/* Search Box */}
         <div className="mb-6">
           <div className="relative">
@@ -527,21 +527,20 @@ const RequestReservation = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Lab Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredLabs.map(lab => (
-            <div 
-              key={lab.id} 
-              className={`bg-white rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition-shadow ${
-                lab.available ? "border-gray-200 cursor-pointer" : "border-red-200 opacity-75"
-              }`}
+            <div
+              key={lab.id}
+              className={`bg-white rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition-shadow ${lab.available ? "border-gray-200 cursor-pointer" : "border-red-200 opacity-75"
+                }`}
               onClick={() => lab.available && handleLabSelect(lab)}
             >
               <div className="h-48 overflow-hidden relative">
-                <img 
-                  src={lab.image} 
-                  alt={lab.name} 
+                <img
+                  src={lab.image}
+                  alt={lab.name}
                   className="w-full h-full object-cover"
                 />
                 {!lab.available && (
@@ -580,7 +579,7 @@ const RequestReservation = () => {
             </div>
           ))}
         </div>
-        
+
         {filteredLabs.length === 0 && (
           <div className="bg-gray-50 p-8 rounded-lg text-center">
             <FaInfoCircle className="text-gray-400 text-4xl mx-auto mb-2" />
@@ -600,12 +599,12 @@ const RequestReservation = () => {
     return (
       <div>
         <h2 className="text-xl font-bold text-[#042E6F] mb-4">Step 2: Select Date and Time</h2>
-        
+
         {/* Selected Lab Summary */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-6 border-l-4 border-[#042E6F] flex flex-col md:flex-row items-center">
-          <img 
-            src={selectedLab.image} 
-            alt={selectedLab.name} 
+          <img
+            src={selectedLab.image}
+            alt={selectedLab.name}
             className="w-24 h-24 object-cover rounded-lg mr-4 mb-4 md:mb-0"
           />
           <div>
@@ -618,26 +617,24 @@ const RequestReservation = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Booking View Toggle */}
         <div className="mb-6">
           <div className="flex border-b border-gray-200">
             <button
-              className={`py-2 px-4 font-medium ${
-                !calendarView
+              className={`py-2 px-4 font-medium ${!calendarView
                   ? "text-[#042E6F] border-b-2 border-[#042E6F]"
                   : "text-gray-500 hover:text-[#042E6F]"
-              }`}
+                }`}
               onClick={() => toggleCalendarView()}
             >
               Single Day Booking
             </button>
             <button
-              className={`py-2 px-4 font-medium ${
-                calendarView
+              className={`py-2 px-4 font-medium ${calendarView
                   ? "text-[#042E6F] border-b-2 border-[#042E6F]"
                   : "text-gray-500 hover:text-[#042E6F]"
-              }`}
+                }`}
               onClick={() => toggleCalendarView()}
             >
               Calendar View (Multiple Days)
@@ -649,7 +646,7 @@ const RequestReservation = () => {
           // Calendar View for Multiple Days Selection
           <div className="mb-6">
             <h3 className="font-semibold text-[#042E6F] mb-3">Select Multiple Days</h3>
-            
+
             {/* Month Navigation */}
             <div className="flex justify-between items-center mb-4">
               <button
@@ -659,11 +656,11 @@ const RequestReservation = () => {
               >
                 <FaChevronLeft className="mr-1" /> Previous Month
               </button>
-              
+
               <h4 className="text-lg font-medium">
                 {new Date(currentMonth + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </h4>
-              
+
               <button
                 type="button"
                 className="flex items-center text-[#042E6F] hover:text-[#021E47]"
@@ -672,7 +669,7 @@ const RequestReservation = () => {
                 Next Month <FaChevronRight className="ml-1" />
               </button>
             </div>
-            
+
             {/* Calendar Grid */}
             <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
               <div className="grid grid-cols-7 gap-1 mb-2">
@@ -682,11 +679,11 @@ const RequestReservation = () => {
                   </div>
                 ))}
               </div>
-              
+
               <div className="grid grid-cols-7 gap-1">
                 {generateCalendar().map((day, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={`aspect-square flex items-center justify-center text-sm rounded-lg 
                       ${day ? getDayStatusColor(day) : "bg-transparent"}
                     `}
@@ -697,7 +694,7 @@ const RequestReservation = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Selected Dates Display */}
             <div className="bg-blue-50 p-4 rounded-lg mb-4 border border-blue-200">
               <h4 className="font-medium text-[#042E6F] mb-2">Selected Dates ({selectedDates.length})</h4>
@@ -724,7 +721,7 @@ const RequestReservation = () => {
               )}
               {errors.dates && <p className="text-red-500 text-xs mt-1">{errors.dates}</p>}
             </div>
-            
+
             {/* Legend */}
             <div className="flex flex-wrap gap-4 mb-6 text-sm">
               <div className="flex items-center">
@@ -744,7 +741,7 @@ const RequestReservation = () => {
                 <span>Unavailable</span>
               </div>
             </div>
-            
+
             {/* Time Slot Selection for Multiple Days */}
             <div className="mb-6">
               <h3 className="font-semibold text-[#042E6F] mb-3">Select Time Slot</h3>
@@ -753,11 +750,10 @@ const RequestReservation = () => {
                   <button
                     key={timeSlot}
                     type="button"
-                    className={`p-3 rounded-lg flex items-center justify-center hover:bg-blue-50 transition ${
-                      selectedTimeForMultipleDays === timeSlot 
-                        ? "bg-blue-100 border-2 border-[#042E6F]" 
+                    className={`p-3 rounded-lg flex items-center justify-center hover:bg-blue-50 transition ${selectedTimeForMultipleDays === timeSlot
+                        ? "bg-blue-100 border-2 border-[#042E6F]"
                         : "bg-white border border-gray-200"
-                    }`}
+                      }`}
                     onClick={() => setSelectedTimeForMultipleDays(timeSlot)}
                   >
                     <FaClock className={`mr-2 ${selectedTimeForMultipleDays === timeSlot ? "text-[#042E6F]" : "text-gray-500"}`} />
@@ -782,11 +778,10 @@ const RequestReservation = () => {
                     <button
                       key={date}
                       type="button"
-                      className={`p-4 rounded-lg text-left hover:bg-blue-50 transition ${
-                        selectedDate === date 
-                          ? "bg-blue-100 border-2 border-[#042E6F]" 
+                      className={`p-4 rounded-lg text-left hover:bg-blue-50 transition ${selectedDate === date
+                          ? "bg-blue-100 border-2 border-[#042E6F]"
                           : "bg-white border border-gray-200"
-                      }`}
+                        }`}
                       onClick={() => handleDateSelect(date)}
                     >
                       <div className="flex items-center">
@@ -804,7 +799,7 @@ const RequestReservation = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Time Slots Selection */}
             {selectedDate && (
               <div className="mb-6">
@@ -815,11 +810,10 @@ const RequestReservation = () => {
                       <button
                         key={timeSlot}
                         type="button"
-                        className={`p-3 rounded-lg flex items-center justify-center hover:bg-blue-50 transition ${
-                          selectedTime === timeSlot 
-                            ? "bg-blue-100 border-2 border-[#042E6F]" 
+                        className={`p-3 rounded-lg flex items-center justify-center hover:bg-blue-50 transition ${selectedTime === timeSlot
+                            ? "bg-blue-100 border-2 border-[#042E6F]"
                             : "bg-white border border-gray-200"
-                        }`}
+                          }`}
                         onClick={() => handleTimeSelect(timeSlot)}
                       >
                         <FaClock className={`mr-2 ${selectedTime === timeSlot ? "text-[#042E6F]" : "text-gray-500"}`} />
@@ -838,7 +832,7 @@ const RequestReservation = () => {
             )}
           </>
         )}
-        
+
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-6">
           <button
@@ -848,13 +842,12 @@ const RequestReservation = () => {
           >
             <FaArrowLeft className="mr-2" /> Back to Lab Selection
           </button>
-          
+
           {calendarView ? (
             <button
               type="button"
-              className={`bg-[#042E6F] text-white px-4 py-2 rounded-lg hover:bg-[#021E47] transition flex items-center ${
-                selectedDates.length === 0 || !selectedTimeForMultipleDays ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`bg-[#042E6F] text-white px-4 py-2 rounded-lg hover:bg-[#021E47] transition flex items-center ${selectedDates.length === 0 || !selectedTimeForMultipleDays ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               onClick={() => {
                 if (selectedDates.length > 0 && selectedTimeForMultipleDays) {
                   setCurrentStep(3);
@@ -868,9 +861,8 @@ const RequestReservation = () => {
           ) : (
             <button
               type="button"
-              className={`bg-[#042E6F] text-white px-4 py-2 rounded-lg hover:bg-[#021E47] transition flex items-center ${
-                !selectedDate || !selectedTime ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`bg-[#042E6F] text-white px-4 py-2 rounded-lg hover:bg-[#021E47] transition flex items-center ${!selectedDate || !selectedTime ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               onClick={() => selectedDate && selectedTime && setCurrentStep(3)}
               disabled={!selectedDate || !selectedTime}
             >
@@ -891,7 +883,7 @@ const RequestReservation = () => {
     return (
       <div>
         <h2 className="text-xl font-bold text-[#042E6F] mb-4">Step 3: Complete Reservation Details</h2>
-        
+
         {/* Reservation Summary */}
         <div className="bg-white rounded-xl shadow-md p-4 mb-6 border-l-4 border-[#042E6F]">
           <h3 className="font-bold text-[#042E6F] mb-2">Reservation Summary</h3>
@@ -904,7 +896,7 @@ const RequestReservation = () => {
                   <div>{selectedLab.name}</div>
                 </div>
               </div>
-              
+
               {calendarView ? (
                 <div className="flex items-start mb-2">
                   <FaCalendarAlt className="text-[#042E6F] mt-1 mr-2" />
@@ -952,7 +944,7 @@ const RequestReservation = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Reservation Form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -984,7 +976,7 @@ const RequestReservation = () => {
                 </div>
                 {errors.course && <p className="text-red-500 text-xs mt-1">{errors.course}</p>}
               </div>
-              
+
               {/* Student Count */}
               <div className="mb-4">
                 <label htmlFor="studentCount" className="block text-sm font-medium text-gray-700 mb-1">
@@ -1012,7 +1004,7 @@ const RequestReservation = () => {
                   <p className="text-gray-500 text-xs mt-1">Maximum capacity: {selectedLab.capacity} students</p>
                 )}
               </div>
-              
+
               {/* Purpose */}
               <div className="mb-4">
                 <label htmlFor="purpose" className="block text-sm font-medium text-gray-700 mb-1">
@@ -1030,7 +1022,7 @@ const RequestReservation = () => {
                 {errors.purpose && <p className="text-red-500 text-xs mt-1">{errors.purpose}</p>}
               </div>
             </div>
-            
+
             {/* Right Column */}
             <div>
               {/* Equipment Selection */}
@@ -1046,11 +1038,10 @@ const RequestReservation = () => {
                         type="button"
                         key={item}
                         onClick={() => toggleEquipment(item)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition ${
-                          formData.equipment.includes(item)
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition ${formData.equipment.includes(item)
                             ? "bg-[#042E6F] text-white"
                             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
+                          }`}
                       >
                         {item}
                       </button>
@@ -1058,7 +1049,7 @@ const RequestReservation = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Additional Info */}
               <div className="mb-4">
                 <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700 mb-1">
@@ -1077,7 +1068,7 @@ const RequestReservation = () => {
                   Include any special requirements or notes for the lab coordinator.
                 </p>
               </div>
-              
+
               {/* Lab Features */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1095,7 +1086,7 @@ const RequestReservation = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Navigation and Submit Buttons */}
           <div className="flex justify-between mt-6">
             <button
@@ -1105,13 +1096,12 @@ const RequestReservation = () => {
             >
               <FaArrowLeft className="mr-2" /> Back to Time Selection
             </button>
-            
+
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`group relative flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-white font-medium ${
-                isSubmitting ? "bg-blue-400" : "bg-[#042E6F] hover:bg-[#021E47]"
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#042E6F] transition duration-150`}
+              className={`group relative flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-white font-medium ${isSubmitting ? "bg-blue-400" : "bg-[#042E6F] hover:bg-[#021E47]"
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#042E6F] transition duration-150`}
             >
               {isSubmitting ? (
                 <>
@@ -1164,25 +1154,20 @@ const RequestReservation = () => {
       {/* Step Indicator */}
       <div className="mb-8">
         <div className="flex items-center">
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
-            currentStep >= 1 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
-          }`}>
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 1 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
+            }`}>
             1
           </div>
-          <div className={`flex-1 h-1 mx-2 ${
-            currentStep >= 2 ? "bg-[#042E6F]" : "bg-gray-200"
-          }`}></div>
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
-            currentStep >= 2 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
-          }`}>
+          <div className={`flex-1 h-1 mx-2 ${currentStep >= 2 ? "bg-[#042E6F]" : "bg-gray-200"
+            }`}></div>
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 2 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
+            }`}>
             2
           </div>
-          <div className={`flex-1 h-1 mx-2 ${
-            currentStep >= 3 ? "bg-[#042E6F]" : "bg-gray-200"
-          }`}></div>
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
-            currentStep >= 3 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
-          }`}>
+          <div className={`flex-1 h-1 mx-2 ${currentStep >= 3 ? "bg-[#042E6F]" : "bg-gray-200"
+            }`}></div>
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 3 ? "bg-[#042E6F] text-white" : "bg-gray-200 text-gray-500"
+            }`}>
             3
           </div>
         </div>
@@ -1199,7 +1184,7 @@ const RequestReservation = () => {
           <FaInfoCircle className="text-[#042E6F] mt-1 mr-2 flex-shrink-0" />
           <div>
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Important:</span> Reservations should be made at least 48 hours in advance. 
+              <span className="font-semibold">Important:</span> Reservations should be made at least 48 hours in advance.
               Your request will be reviewed by a lab coordinator and you'll receive a notification once it's approved or rejected.
               You can now book multiple days at once using the calendar view!
             </p>

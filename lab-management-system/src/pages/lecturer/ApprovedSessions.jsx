@@ -80,7 +80,7 @@ const ApprovedSessions = () => {
     })
     .sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortField) {
         case "date":
           comparison = new Date(a.date) - new Date(b.date);
@@ -94,7 +94,7 @@ const ApprovedSessions = () => {
         default:
           comparison = new Date(a.date) - new Date(b.date);
       }
-      
+
       return sortDirection === "asc" ? comparison : -comparison;
     });
 
@@ -124,11 +124,11 @@ const ApprovedSessions = () => {
   const generateICalEvent = (session) => {
     const startDateTime = new Date(session.date + "T" + session.time.split(" - ")[0] + ":00");
     const endDateTime = new Date(session.date + "T" + session.time.split(" - ")[1] + ":00");
-    
+
     const formatICalDate = (date) => {
       return date.toISOString().replace(/-|:|\.\d+/g, "");
     };
-    
+
     const icalContent = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
@@ -144,7 +144,7 @@ const ApprovedSessions = () => {
       "END:VEVENT",
       "END:VCALENDAR"
     ].join("\r\n");
-    
+
     return icalContent;
   };
 
@@ -153,7 +153,7 @@ const ApprovedSessions = () => {
     const icalContent = generateICalEvent(session);
     const blob = new Blob([icalContent], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    
+
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", `lab-session-${session.id}.ics`);
@@ -180,7 +180,7 @@ const ApprovedSessions = () => {
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          
+
           <div className="flex gap-2">
             <button
               className="bg-[#042E6F] text-white px-3 py-2 rounded-lg hover:bg-[#021E47] transition flex items-center text-sm"
@@ -220,19 +220,19 @@ const ApprovedSessions = () => {
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
           {/* Sort Header */}
           <div className="p-4 border-b border-gray-200 bg-gray-50 hidden sm:grid sm:grid-cols-4 text-sm font-medium text-gray-600">
-            <button 
+            <button
               className="flex items-center text-left hover:text-[#042E6F]"
               onClick={() => handleSort("date")}
             >
               Date & Time {getSortIndicator("date")}
             </button>
-            <button 
+            <button
               className="flex items-center text-left hover:text-[#042E6F]"
               onClick={() => handleSort("lab")}
             >
               Lab {getSortIndicator("lab")}
             </button>
-            <button 
+            <button
               className="flex items-center text-left hover:text-[#042E6F]"
               onClick={() => handleSort("course")}
             >
@@ -240,7 +240,7 @@ const ApprovedSessions = () => {
             </button>
             <div className="text-right">Actions</div>
           </div>
-          
+
           <div className="divide-y divide-gray-200">
             {filteredSessions.map(session => (
               <div key={session.id} className="p-4 md:p-6 hover:bg-gray-50 transition-colors">
@@ -255,7 +255,7 @@ const ApprovedSessions = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <div className="sm:hidden font-semibold text-gray-500 mb-1">Lab:</div>
                     <div className="flex items-center">
@@ -263,7 +263,7 @@ const ApprovedSessions = () => {
                       <div className="font-medium">{session.lab}</div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <div className="sm:hidden font-semibold text-gray-500 mb-1">Course:</div>
                     <div className="flex items-center">
@@ -274,7 +274,7 @@ const ApprovedSessions = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-2 sm:justify-end items-center">
                     <button
                       onClick={() => setModal(session)}
@@ -290,7 +290,7 @@ const ApprovedSessions = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="mt-3">
                   <div className="text-sm">
                     <span className="font-medium">Purpose:</span> {session.purpose}
@@ -334,7 +334,7 @@ const ApprovedSessions = () => {
                   <FaFileDownload className="mr-2" /> Add to Calendar
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-[#042E6F] mb-3">Session Information</h3>
@@ -361,11 +361,11 @@ const ApprovedSessions = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold text-[#042E6F] mb-3">Purpose</h3>
                   <p className="bg-gray-50 p-4 rounded-lg mb-4">{modal.purpose}</p>
-                  
+
                   {modal.notes && (
                     <>
                       <h3 className="font-semibold text-[#042E6F] mb-2">Special Notes</h3>
@@ -376,7 +376,7 @@ const ApprovedSessions = () => {
                   )}
                 </div>
               </div>
-              
+
               {modal.equipment.length > 0 && (
                 <div className="mt-6">
                   <h3 className="font-semibold text-[#042E6F] mb-3">Equipment</h3>
@@ -389,7 +389,7 @@ const ApprovedSessions = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="mt-6 border-t border-gray-200 pt-4 flex justify-between">
                 <button
                   onClick={() => window.print()}

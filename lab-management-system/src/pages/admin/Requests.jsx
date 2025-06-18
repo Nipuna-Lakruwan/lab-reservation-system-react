@@ -159,7 +159,7 @@ const Requests = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [modal, setModal] = useState(null); // {type: 'approve'|'reject'|'bulk-approve'|'bulk-reject', request: {...}}
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     userType: "all",
@@ -167,7 +167,7 @@ const Requests = () => {
     dateFrom: "",
     dateTo: ""
   });
-  
+
   // Pagination states
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -178,39 +178,39 @@ const Requests = () => {
   // Effect to apply filters
   useEffect(() => {
     let filtered = [...requests];
-    
+
     // Apply user type filter
     if (filters.userType !== "all") {
-      filtered = filtered.filter(req => 
+      filtered = filtered.filter(req =>
         req.role.toLowerCase() === filters.userType.toLowerCase()
       );
     }
-    
+
     // Apply lab filter
     if (filters.lab !== "all") {
       filtered = filtered.filter(req => req.lab === filters.lab);
     }
-    
+
     // Apply date range filter
     if (filters.dateFrom) {
-      filtered = filtered.filter(req => 
+      filtered = filtered.filter(req =>
         new Date(req.date) >= new Date(filters.dateFrom)
       );
     }
-    
+
     if (filters.dateTo) {
-      filtered = filtered.filter(req => 
+      filtered = filtered.filter(req =>
         new Date(req.date) <= new Date(filters.dateTo)
       );
     }
-    
+
     setFilteredRequests(filtered);
     setPagination(prev => ({
       ...prev,
       currentPage: 1,
       totalPages: Math.ceil(filtered.length / prev.itemsPerPage)
     }));
-    
+
     // Reset selections when filters change
     setSelectedItems([]);
     setSelectAll(false);
@@ -279,24 +279,24 @@ const Requests = () => {
   const handleAction = (type, request) => {
     setModal({ type, request });
   };
-  
+
   // Handle bulk action
   const handleBulkAction = (type) => {
     if (selectedItems.length === 0) return;
-    
+
     setModal({
       type: `bulk-${type}`,
       count: selectedItems.length
     });
   };
-  
+
   // Close modal
   const closeModal = () => setModal(null);
 
   // Confirm individual action
   const handleConfirmAction = () => {
     if (!modal || !modal.request) return;
-    
+
     setRequests(prev =>
       prev.map(r =>
         r.id === modal.request.id
@@ -306,13 +306,13 @@ const Requests = () => {
     );
     closeModal();
   };
-  
+
   // Confirm bulk action
   const handleConfirmBulkAction = () => {
     if (!modal) return;
-    
+
     const actionType = modal.type === "bulk-approve" ? "Approved" : "Rejected";
-    
+
     setRequests(prev =>
       prev.map(r =>
         selectedItems.includes(r.id)
@@ -320,7 +320,7 @@ const Requests = () => {
           : r
       )
     );
-    
+
     setSelectedItems([]);
     setSelectAll(false);
     closeModal();
@@ -349,7 +349,7 @@ const Requests = () => {
       <p className="mb-6 text-gray-600">
         Manage and process lab reservation requests efficiently.
       </p>
-      
+
       {/* Filter Controls Section */}
       <section className="filter-controls mb-6">
         <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-gray-200">
@@ -421,7 +421,7 @@ const Requests = () => {
               <button
                 type="button"
                 className="bg-[#042E6F] text-white px-4 py-2 rounded hover:bg-[#06419d] transition font-medium"
-                onClick={() => {/* Apply filters is automatic */}}
+                onClick={() => {/* Apply filters is automatic */ }}
               >
                 Apply Filters
               </button>
@@ -429,7 +429,7 @@ const Requests = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Bulk Actions Section */}
       <section className="bulk-actions mb-6">
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
@@ -465,7 +465,7 @@ const Requests = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Requests Table Section - Improved for mobile */}
       <section className="requests-section mb-6">
         <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-gray-200">
@@ -573,7 +573,7 @@ const Requests = () => {
               </table>
             </div>
           </div>
-          
+
           {/* Pagination Controls - Better mobile layout */}
           {filteredRequests.length > 0 && (
             <div className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 pt-4 mt-4">
@@ -582,11 +582,10 @@ const Requests = () => {
               </div>
               <div className="flex items-center">
                 <button
-                  className={`flex items-center gap-1 px-3 py-1 rounded text-sm ${
-                    pagination.currentPage > 1
+                  className={`flex items-center gap-1 px-3 py-1 rounded text-sm ${pagination.currentPage > 1
                       ? "text-[#042E6F] hover:bg-[#042E6F10]"
                       : "text-gray-400 cursor-not-allowed"
-                  }`}
+                    }`}
                   onClick={() => pagination.currentPage > 1 && changePage(pagination.currentPage - 1)}
                   disabled={pagination.currentPage <= 1}
                 >
@@ -598,11 +597,10 @@ const Requests = () => {
                     [...Array(pagination.totalPages)].map((_, idx) => (
                       <button
                         key={idx}
-                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${
-                          pagination.currentPage === idx + 1
+                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${pagination.currentPage === idx + 1
                             ? "bg-[#042E6F] text-white"
                             : "text-[#042E6F] hover:bg-[#042E6F10]"
-                        }`}
+                          }`}
                         onClick={() => changePage(idx + 1)}
                       >
                         {idx + 1}
@@ -613,21 +611,20 @@ const Requests = () => {
                     <>
                       {/* First page */}
                       <button
-                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${
-                          pagination.currentPage === 1
+                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${pagination.currentPage === 1
                             ? "bg-[#042E6F] text-white"
                             : "text-[#042E6F] hover:bg-[#042E6F10]"
-                        }`}
+                          }`}
                         onClick={() => changePage(1)}
                       >
                         1
                       </button>
-                      
+
                       {/* Ellipsis or second page */}
                       {pagination.currentPage > 3 && (
                         <span className="w-8 h-8 flex items-center justify-center">...</span>
                       )}
-                      
+
                       {/* Pages around current page */}
                       {[...Array(pagination.totalPages)].slice(
                         Math.max(1, pagination.currentPage - 1) - 1,
@@ -637,30 +634,28 @@ const Requests = () => {
                         return (
                           <button
                             key={pageNum}
-                            className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${
-                              pagination.currentPage === pageNum
+                            className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${pagination.currentPage === pageNum
                                 ? "bg-[#042E6F] text-white"
                                 : "text-[#042E6F] hover:bg-[#042E6F10]"
-                            }`}
+                              }`}
                             onClick={() => changePage(pageNum)}
                           >
                             {pageNum}
                           </button>
                         );
                       })}
-                      
+
                       {/* Ellipsis or second-to-last page */}
                       {pagination.currentPage < pagination.totalPages - 2 && (
                         <span className="w-8 h-8 flex items-center justify-center">...</span>
                       )}
-                      
+
                       {/* Last page */}
                       <button
-                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${
-                          pagination.currentPage === pagination.totalPages
+                        className={`w-8 h-8 flex items-center justify-center rounded-full mx-1 ${pagination.currentPage === pagination.totalPages
                             ? "bg-[#042E6F] text-white"
                             : "text-[#042E6F] hover:bg-[#042E6F10]"
-                        }`}
+                          }`}
                         onClick={() => changePage(pagination.totalPages)}
                       >
                         {pagination.totalPages}
@@ -669,13 +664,12 @@ const Requests = () => {
                   )}
                 </div>
                 <button
-                  className={`flex items-center gap-1 px-3 py-1 rounded text-sm ${
-                    pagination.currentPage < pagination.totalPages
+                  className={`flex items-center gap-1 px-3 py-1 rounded text-sm ${pagination.currentPage < pagination.totalPages
                       ? "text-[#042E6F] hover:bg-[#042E6F10]"
                       : "text-gray-400 cursor-not-allowed"
-                  }`}
-                  onClick={() => 
-                    pagination.currentPage < pagination.totalPages && 
+                    }`}
+                  onClick={() =>
+                    pagination.currentPage < pagination.totalPages &&
                     changePage(pagination.currentPage + 1)
                   }
                   disabled={pagination.currentPage >= pagination.totalPages}
@@ -709,19 +703,19 @@ const Requests = () => {
                 <div className="grid grid-cols-3 gap-2 text-sm sm:text-base">
                   <div className="font-semibold">Requester:</div>
                   <div className="col-span-2 break-words">{modal.request.requester}</div>
-                  
+
                   <div className="font-semibold">Role:</div>
                   <div className="col-span-2">{modal.request.role}</div>
-                  
+
                   <div className="font-semibold">Lab:</div>
                   <div className="col-span-2">{modal.request.lab}</div>
-                  
+
                   <div className="font-semibold">Date:</div>
                   <div className="col-span-2">{modal.request.date}</div>
-                  
+
                   <div className="font-semibold">Time:</div>
                   <div className="col-span-2">{modal.request.time}</div>
-                  
+
                   <div className="font-semibold">Purpose:</div>
                   <div className="col-span-2">{modal.request.purpose}</div>
                 </div>
@@ -812,11 +806,10 @@ const Requests = () => {
                   Cancel
                 </button>
                 <button
-                  className={`px-6 py-2 ${
-                    modal.type === "bulk-approve" 
-                      ? "bg-green-600 hover:bg-green-700" 
+                  className={`px-6 py-2 ${modal.type === "bulk-approve"
+                      ? "bg-green-600 hover:bg-green-700"
                       : "bg-red-600 hover:bg-red-700"
-                  } text-white rounded transition font-medium`}
+                    } text-white rounded transition font-medium`}
                   onClick={handleConfirmBulkAction}
                 >
                   Confirm

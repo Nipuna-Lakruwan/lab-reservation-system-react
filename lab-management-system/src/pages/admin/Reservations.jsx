@@ -37,16 +37,16 @@ const generateReservations = () => {
   const labs = ["Computer Lab A", "Computer Lab B", "Computer Lab C", "Computer Lab D", "Computer Lab E", "Research Laboratory"];
   const users = ["Alice", "Bob", "Charlie", "David", "Emily", "Frank"];
   const statuses = ["Upcoming", "In Progress", "Completed", "Cancelled"];
-  
+
   const reservations = [];
   const today = new Date();
-  
+
   // Generate 100 random reservations spanning past, present and future
   for (let i = 1; i <= 100; i++) {
     const daysOffset = Math.floor(Math.random() * 60) - 30; // -30 to +30 days from today
     const date = new Date(today);
     date.setDate(today.getDate() + daysOffset);
-    
+
     // Determine status based on date
     let status;
     if (isBefore(date, today) && !isToday(date)) {
@@ -56,12 +56,12 @@ const generateReservations = () => {
     } else {
       status = Math.random() < 0.1 ? "Cancelled" : "Upcoming"; // 10% chance of cancelled
     }
-    
+
     // Random duration between 1-3 hours
     const durationHours = Math.floor(Math.random() * 3) + 1;
     const startHour = 8 + Math.floor(Math.random() * 8); // 8 AM to 4 PM
     const endHour = startHour + durationHours;
-    
+
     reservations.push({
       id: i,
       lab: labs[Math.floor(Math.random() * labs.length)],
@@ -74,7 +74,7 @@ const generateReservations = () => {
       createdAt: formatDate(new Date(today.getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000))
     });
   }
-  
+
   return reservations;
 };
 
@@ -116,26 +116,26 @@ const Reservations = () => {
   useEffect(() => {
     setLoading(true);
     let results = [...reservations];
-    
+
     // Apply search
     if (searchTerm) {
-      results = results.filter(reservation => 
+      results = results.filter(reservation =>
         reservation.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.lab.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.purpose.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     // Apply status filter
     if (filters.status !== "all") {
       results = results.filter(reservation => reservation.status === filters.status);
     }
-    
+
     // Apply lab filter
     if (filters.lab !== "all") {
       results = results.filter(reservation => reservation.lab === filters.lab);
     }
-    
+
     // Apply date range filter
     if (filters.dateRange === "custom" && filters.startDate && filters.endDate) {
       results = results.filter(reservation => {
@@ -143,7 +143,7 @@ const Reservations = () => {
         const startDate = new Date(filters.startDate);
         const endDate = new Date(filters.endDate);
         endDate.setHours(23, 59, 59); // Include the entire end day
-        
+
         return reservationDate >= startDate && reservationDate <= endDate;
       });
     } else if (filters.dateRange === "today") {
@@ -156,7 +156,7 @@ const Reservations = () => {
       startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
       const endOfWeek = new Date(today);
       endOfWeek.setDate(today.getDate() + (6 - today.getDay())); // Saturday
-      
+
       results = results.filter(reservation => {
         const reservationDate = new Date(reservation.date);
         return reservationDate >= startOfWeek && reservationDate <= endOfWeek;
@@ -165,18 +165,18 @@ const Reservations = () => {
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-      
+
       results = results.filter(reservation => {
         const reservationDate = new Date(reservation.date);
         return reservationDate >= startOfMonth && reservationDate <= endOfMonth;
       });
     }
-    
+
     // Apply sorting
     results.sort((a, b) => {
       let comparison = 0;
-      
-      switch(sorting.field) {
+
+      switch (sorting.field) {
         case "date":
           comparison = new Date(a.date) - new Date(b.date);
           break;
@@ -192,17 +192,17 @@ const Reservations = () => {
         default:
           comparison = new Date(a.date) - new Date(b.date);
       }
-      
+
       return sorting.direction === "asc" ? comparison : -comparison;
     });
-    
+
     // Update pagination
     setPagination(prev => ({
       ...prev,
       totalPages: Math.ceil(results.length / prev.itemsPerPage),
       currentPage: 1 // Reset to first page when filters change
     }));
-    
+
     setFilteredReservations(results);
     setLoading(false);
   }, [reservations, searchTerm, filters, sorting]);
@@ -241,10 +241,10 @@ const Reservations = () => {
 
   // Handle reservation cancellation
   const handleCancelReservation = () => {
-    setReservations(prev => 
-      prev.map(res => 
-        res.id === cancelModal.id 
-          ? { ...res, status: "Cancelled" } 
+    setReservations(prev =>
+      prev.map(res =>
+        res.id === cancelModal.id
+          ? { ...res, status: "Cancelled" }
           : res
       )
     );
@@ -264,7 +264,7 @@ const Reservations = () => {
     <div>
       <h1 className="text-2xl font-bold text-[#042E6F] mb-2">All Reservations</h1>
       <p className="mb-6 text-gray-600">View and manage all lab reservations in one place.</p>
-      
+
       {/* Filters and Search Section */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-4">
@@ -284,7 +284,7 @@ const Reservations = () => {
             />
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -301,7 +301,7 @@ const Reservations = () => {
               <option value="Cancelled">Cancelled</option>
             </select>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Lab</label>
             <select
@@ -316,7 +316,7 @@ const Reservations = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
             <select
@@ -332,7 +332,7 @@ const Reservations = () => {
               <option value="custom">Custom Range</option>
             </select>
           </div>
-          
+
           {filters.dateRange === "custom" && (
             <div className="flex gap-2 items-center">
               <div>
@@ -358,20 +358,20 @@ const Reservations = () => {
             </div>
           )}
         </div>
-        
+
         <div className="flex justify-between items-center mt-4">
           <div className="text-sm text-gray-600">
             Found <span className="font-semibold">{filteredReservations.length}</span> reservations
           </div>
-          <button 
+          <button
             className="flex items-center gap-2 bg-[#042E6F] text-white px-4 py-2 rounded hover:bg-[#021E47] transition"
-            onClick={() => {/* Export functionality */}}
+            onClick={() => {/* Export functionality */ }}
           >
             <FaDownload /> Export
           </button>
         </div>
       </div>
-      
+
       {/* Reservations Table */}
       <div className="bg-white rounded-xl shadow-lg p-6 overflow-hidden">
         {loading ? (
@@ -391,8 +391,8 @@ const Reservations = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("date")}
                     >
@@ -401,8 +401,8 @@ const Reservations = () => {
                         <span className="ml-1">{getSortIcon("date")}</span>
                       </div>
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("lab")}
                     >
@@ -411,8 +411,8 @@ const Reservations = () => {
                         <span className="ml-1">{getSortIcon("lab")}</span>
                       </div>
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("user")}
                     >
@@ -424,8 +424,8 @@ const Reservations = () => {
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Time
                     </th>
-                    <th 
-                      scope="col" 
+                    <th
+                      scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                       onClick={() => handleSortChange("status")}
                     >
@@ -461,7 +461,7 @@ const Reservations = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button 
+                        <button
                           className="text-[#042E6F] hover:text-[#021E47] mr-3"
                           onClick={() => setDetailModal(reservation)}
                           title="View Details"
@@ -470,14 +470,14 @@ const Reservations = () => {
                         </button>
                         {reservation.status === "Upcoming" && (
                           <>
-                            <button 
+                            <button
                               className="text-blue-600 hover:text-blue-900 mr-3"
-                              onClick={() => {/* Edit functionality */}}
+                              onClick={() => {/* Edit functionality */ }}
                               title="Edit Reservation"
                             >
                               <FaEdit />
                             </button>
-                            <button 
+                            <button
                               className="text-red-600 hover:text-red-900"
                               onClick={() => setCancelModal(reservation)}
                               title="Cancel Reservation"
@@ -492,7 +492,7 @@ const Reservations = () => {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
             <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
@@ -508,35 +508,32 @@ const Reservations = () => {
                     <button
                       onClick={() => handlePageChange(pagination.currentPage - 1)}
                       disabled={pagination.currentPage === 1}
-                      className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
-                        pagination.currentPage === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                      }`}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${pagination.currentPage === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
+                        }`}
                     >
                       <span className="sr-only">Previous</span>
                       &larr;
                     </button>
-                    
+
                     {/* Page numbers */}
                     {[...Array(pagination.totalPages).keys()].map((x, i) => (
                       <button
                         key={i}
                         onClick={() => handlePageChange(i + 1)}
-                        className={`relative inline-flex items-center px-4 py-2 border ${
-                          pagination.currentPage === i + 1
+                        className={`relative inline-flex items-center px-4 py-2 border ${pagination.currentPage === i + 1
                             ? "z-10 bg-[#042E6F] border-[#042E6F] text-white"
                             : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                        } text-sm font-medium`}
+                          } text-sm font-medium`}
                       >
                         {i + 1}
                       </button>
                     ))}
-                    
+
                     <button
                       onClick={() => handlePageChange(pagination.currentPage + 1)}
                       disabled={pagination.currentPage === pagination.totalPages}
-                      className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                        pagination.currentPage === pagination.totalPages ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                      }`}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${pagination.currentPage === pagination.totalPages ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
+                        }`}
                     >
                       <span className="sr-only">Next</span>
                       &rarr;
@@ -548,14 +545,14 @@ const Reservations = () => {
           </>
         )}
       </div>
-      
+
       {/* Reservation Detail Modal */}
       {detailModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
             <div className="bg-[#042E6F] text-white px-6 py-4 flex justify-between items-center">
               <h3 className="text-lg font-semibold">Reservation Details</h3>
-              <button 
+              <button
                 onClick={() => setDetailModal(null)}
                 className="text-white hover:text-gray-200"
               >
@@ -572,7 +569,7 @@ const Reservations = () => {
                   {detailModal.status}
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <h5 className="text-sm font-semibold text-gray-500 uppercase mb-2">Reservation Info</h5>
@@ -588,7 +585,7 @@ const Reservations = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h5 className="text-sm font-semibold text-gray-500 uppercase mb-2">User Info</h5>
                   <div className="bg-gray-50 rounded-lg p-4">
@@ -604,7 +601,7 @@ const Reservations = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="border-t border-gray-200 pt-4 flex justify-end gap-3">
                 <button
                   className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
@@ -639,7 +636,7 @@ const Reservations = () => {
           </div>
         </div>
       )}
-      
+
       {/* Cancel Reservation Modal */}
       {cancelModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

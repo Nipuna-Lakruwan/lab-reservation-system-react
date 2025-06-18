@@ -5,6 +5,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./components/admin/AdminLayout";
 import LecturerLayout from "./components/lecturer/LecturerLayout";
+import StudentLayout from "./components/student/StudentLayout";
 
 // Admin pages
 import Dashboard from "./pages/admin/AdminDashboard";
@@ -23,6 +24,14 @@ import RequestReservation from "./pages/lecturer/RequestReservation";
 import MyReservations from "./pages/lecturer/MyReservations";
 import ApprovedSessions from "./pages/lecturer/ApprovedSessions";
 import LecturerProfile from "./pages/lecturer/LecturerProfile";
+
+// Student pages
+import StudentDashboard from "./pages/student/StudentDashboard";
+import ViewLabs from "./pages/student/ViewLabs";
+import BookLab from "./pages/student/BookLab";
+import MyBookings from "./pages/student/MyBookings";
+import ReservationHistory from "./pages/student/ReservationHistory";
+import StudentProfile from "./pages/student/StudentProfile";
 
 // Auth pages
 import Login from "./pages/auth/Login";
@@ -50,6 +59,12 @@ function App() {
         <LecturerLayout>
           <LecturerDashboard />
         </LecturerLayout>
+      );
+    } else if (userRole === "student") {
+      return (
+        <StudentLayout>
+          <StudentDashboard />
+        </StudentLayout>
       );
     }
 
@@ -90,6 +105,18 @@ function App() {
             <Route path="/lecturer/my-reservations" element={<LecturerLayout><MyReservations /></LecturerLayout>} />
             <Route path="/lecturer/approved-sessions" element={<LecturerLayout><ApprovedSessions /></LecturerLayout>} />
             <Route path="/lecturer/profile" element={<LecturerLayout><LecturerProfile /></LecturerLayout>} />
+          </>
+        )}
+
+        {/* Student Routes */}
+        {isAuthenticated && userRole === "student" && (
+          <>
+            <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+            <Route path="/student/view-labs" element={<StudentLayout><ViewLabs /></StudentLayout>} />
+            <Route path="/student/book-lab" element={<StudentLayout><BookLab /></StudentLayout>} />
+            <Route path="/student/my-bookings" element={<StudentLayout><MyBookings /></StudentLayout>} />
+            <Route path="/student/reservation-history" element={<StudentLayout><ReservationHistory /></StudentLayout>} />
+            <Route path="/student/profile" element={<StudentLayout><StudentProfile /></StudentLayout>} />
           </>
         )}
 

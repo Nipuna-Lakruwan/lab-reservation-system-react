@@ -6,17 +6,18 @@ import { useNavigate } from "react-router-dom";
 import {
   FaCalendarAlt, FaClock, FaChevronRight,
   FaFlask, FaChartBar, FaClipboardCheck,
-  FaExclamationTriangle, FaPlus, FaCalendarCheck
+  FaExclamationTriangle, FaPlusCircle, FaCalendarCheck,
+  FaHistory, FaUserGraduate
 } from "react-icons/fa";
 
-// Sample upcoming reservations
-const upcomingReservations = [
+// Sample upcoming bookings
+const upcomingBookings = [
   {
     id: 1,
     lab: "Physics Lab",
     date: "2025-06-22",
     time: "10:00 - 12:00",
-    status: "Approved",
+    status: "Confirmed",
     course: "PHY301: Advanced Physics"
   },
   {
@@ -32,14 +33,14 @@ const upcomingReservations = [
     lab: "Chemistry Lab",
     date: "2025-06-28",
     time: "09:00 - 11:00",
-    status: "Approved",
+    status: "Confirmed",
     course: "CHM202: Organic Chemistry"
   }
 ];
 
 // Sample statistics
-const lecturerStats = [
-  { label: "Total Reservations", value: 12, icon: <FaCalendarAlt />, color: "bg-blue-500" },
+const studentStats = [
+  { label: "Total Bookings", value: 8, icon: <FaCalendarAlt />, color: "bg-blue-500" },
   { label: "Upcoming Sessions", value: 3, icon: <FaCalendarCheck />, color: "bg-green-600" },
   { label: "Pending Requests", value: 1, icon: <FaExclamationTriangle />, color: "bg-yellow-400" }
 ];
@@ -58,14 +59,14 @@ function getSriLankaCurrentDateTime() {
   };
 }
 
-const LecturerDashboard = () => {
+const StudentDashboard = () => {
   const [dateTime, setDateTime] = useState(getSriLankaCurrentDateTime());
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
 
   // Get user from localStorage
   const userStr = localStorage.getItem("user");
-  const user = userStr ? JSON.parse(userStr) : { name: "Lecturer" };
+  const user = userStr ? JSON.parse(userStr) : { name: "John Smith" };
 
   // Check screen size to detect mobile
   useEffect(() => {
@@ -94,7 +95,7 @@ const LecturerDashboard = () => {
   // Get status badge styling
   const getStatusBadge = (status) => {
     switch (status) {
-      case "Approved":
+      case "Confirmed":
         return "bg-green-100 text-green-800 border-green-200";
       case "Pending":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
@@ -105,13 +106,20 @@ const LecturerDashboard = () => {
     }
   };
 
+  // Available labs data for the quick view
+  const availableLabs = [
+    { id: 1, name: "Physics Lab", availableSlots: 3, nextAvailable: "Today, 2:00 PM" },
+    { id: 2, name: "Computer Lab A", availableSlots: 5, nextAvailable: "Tomorrow, 9:00 AM" },
+    { id: 3, name: "Chemistry Lab", availableSlots: 2, nextAvailable: "Today, 4:00 PM" },
+  ];
+
   return (
     <div className="pb-6">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#042E6F] mb-2">Welcome, {user.name}</h1>
-          <p className="mb-2 md:mb-0 text-gray-700">Manage your lab reservations and scheduled sessions.</p>
+          <p className="mb-2 md:mb-0 text-gray-700">Access and manage your lab bookings and sessions.</p>
         </div>
         <div className="flex flex-col items-start md:items-end text-sm text-[#042E6F] font-semibold bg-blue-50 p-2 rounded-lg mt-2 md:mt-0">
           <div className="flex items-center">
@@ -125,7 +133,7 @@ const LecturerDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6">
-        {lecturerStats.map((stat, index) => (
+        {studentStats.map((stat, index) => (
           <div
             key={index}
             className={`rounded-xl shadow-lg p-4 md:p-6 flex items-center border-l-4 border-[#042E6F] bg-white hover:bg-[#F8FAFF] transition-colors`}
@@ -148,65 +156,98 @@ const LecturerDashboard = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <button
-            onClick={() => navigate('/lecturer/request-reservation')}
+            onClick={() => navigate('/student/book-lab')}
             className="flex items-center p-4 rounded-lg bg-[#042E6F] text-white hover:bg-[#021E47] transition shadow"
           >
             <div className="bg-blue-700 p-3 rounded-lg mr-4">
-              <FaPlus />
+              <FaPlusCircle />
             </div>
             <div className="text-left">
-              <span className="block font-bold">New Reservation</span>
-              <span className="text-xs opacity-80">Book a lab for a session</span>
+              <span className="block font-bold">Book a Lab</span>
+              <span className="text-xs opacity-80">Reserve a lab for your session</span>
             </div>
           </button>
 
           <button
-            onClick={() => navigate('/lecturer/my-reservations')}
+            onClick={() => navigate('/student/my-bookings')}
             className="flex items-center p-4 rounded-lg bg-green-600 text-white hover:bg-green-700 transition shadow"
           >
             <div className="bg-green-700 p-3 rounded-lg mr-4">
               <FaCalendarAlt />
             </div>
             <div className="text-left">
-              <span className="block font-bold">My Reservations</span>
-              <span className="text-xs opacity-80">View all your bookings</span>
+              <span className="block font-bold">My Bookings</span>
+              <span className="text-xs opacity-80">View your active bookings</span>
             </div>
           </button>
 
           <button
-            onClick={() => navigate('/lecturer/approved-sessions')}
+            onClick={() => navigate('/student/view-labs')}
             className="flex items-center p-4 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition shadow"
           >
             <div className="bg-yellow-600 p-3 rounded-lg mr-4">
-              <FaClipboardCheck />
+              <FaFlask />
             </div>
             <div className="text-left">
-              <span className="block font-bold">Approved Sessions</span>
-              <span className="text-xs opacity-80">See approved lab sessions</span>
+              <span className="block font-bold">Browse Labs</span>
+              <span className="text-xs opacity-80">Explore available labs</span>
             </div>
           </button>
         </div>
       </div>
 
-      {/* Upcoming Reservations */}
+      {/* Available Labs */}
       <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-l-4 border-[#042E6F] mb-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg md:text-xl font-bold text-[#042E6F] flex items-center">
-            <FaCalendarCheck className="mr-2" /> Upcoming Reservations
+            <FaFlask className="mr-2" /> Available Labs
           </h2>
           <button
-            onClick={() => navigate('/lecturer/my-reservations')}
+            onClick={() => navigate('/student/view-labs')}
             className="text-[#042E6F] hover:underline text-sm font-medium flex items-center"
           >
             View All <FaChevronRight className="ml-1 text-xs" />
           </button>
         </div>
 
-        {upcomingReservations.length === 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {availableLabs.map(lab => (
+            <div key={lab.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+              <h3 className="font-bold text-[#042E6F] mb-1">{lab.name}</h3>
+              <div className="text-sm text-gray-600 mb-2">
+                <span className="font-medium">{lab.availableSlots}</span> time slots available
+              </div>
+              <div className="text-xs text-gray-500">Next available: {lab.nextAvailable}</div>
+              <button
+                onClick={() => navigate('/student/book-lab')}
+                className="mt-3 bg-[#042E6F] text-white px-3 py-1 rounded-lg text-sm hover:bg-[#021E47] transition"
+              >
+                Book Now
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Upcoming Bookings */}
+      <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-l-4 border-[#042E6F] mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg md:text-xl font-bold text-[#042E6F] flex items-center">
+            <FaCalendarCheck className="mr-2" /> Upcoming Bookings
+          </h2>
+          <button
+            onClick={() => navigate('/student/my-bookings')}
+            className="text-[#042E6F] hover:underline text-sm font-medium flex items-center"
+          >
+            View All <FaChevronRight className="ml-1 text-xs" />
+          </button>
+        </div>
+
+        {upcomingBookings.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">You don't have any upcoming reservations.</p>
+            <p className="text-gray-500">You don't have any upcoming bookings.</p>
             <button
-              onClick={() => navigate('/lecturer/request-reservation')}
+              onClick={() => navigate('/student/book-lab')}
               className="mt-2 text-[#042E6F] hover:underline"
             >
               Book a lab now
@@ -214,30 +255,30 @@ const LecturerDashboard = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {upcomingReservations.map(reservation => (
-              <div key={reservation.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition flex flex-col md:flex-row md:items-center">
+            {upcomingBookings.map(booking => (
+              <div key={booking.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition flex flex-col md:flex-row md:items-center">
                 <div className="flex-1">
                   <div className="flex items-start">
                     <div className="bg-blue-100 p-3 rounded-lg mr-3">
                       <FaFlask className="text-[#042E6F]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-[#042E6F]">{reservation.lab}</h3>
-                      <p className="text-sm text-gray-600">{reservation.course}</p>
+                      <h3 className="font-bold text-[#042E6F]">{booking.lab}</h3>
+                      <p className="text-sm text-gray-600">{booking.course}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center mt-4 md:mt-0 space-y-2 md:space-y-0 md:space-x-4">
                   <div className="flex items-center text-sm text-gray-600">
                     <FaCalendarAlt className="mr-1 text-gray-400" />
-                    {formatDate(reservation.date)}
+                    {formatDate(booking.date)}
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <FaClock className="mr-1 text-gray-400" />
-                    {reservation.time}
+                    {booking.time}
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(reservation.status)}`}>
-                    {reservation.status}
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(booking.status)}`}>
+                    {booking.status}
                   </span>
                 </div>
               </div>
@@ -248,16 +289,17 @@ const LecturerDashboard = () => {
 
       {/* Help Box */}
       <div className="bg-blue-50 rounded-xl shadow p-4 md:p-6 border-l-4 border-[#042E6F]">
-        <h2 className="text-lg font-bold text-[#042E6F] mb-2">Quick Tips</h2>
+        <h2 className="text-lg font-bold text-[#042E6F] mb-2">Student Tips</h2>
         <ul className="list-disc pl-6 text-gray-700 text-sm space-y-1">
-          <li>Plan ahead! Book labs at least 48 hours in advance.</li>
-          <li>Check your email for reservation status updates.</li>
-          <li>If you need to cancel a reservation, please do so at least 24 hours before the scheduled time.</li>
-          <li>Contact the lab coordinator if you need special equipment for your session.</li>
+          <li>Book your lab sessions in advance to secure your preferred time slots.</li>
+          <li>Check your email or notifications regularly for updates on your bookings.</li>
+          <li>If you need to cancel a booking, please do so at least 24 hours in advance.</li>
+          <li>For any technical issues during lab sessions, contact the lab assistant on duty.</li>
+          <li>Don't forget to submit your lab reports within the specified deadline.</li>
         </ul>
       </div>
     </div>
   );
 };
 
-export default LecturerDashboard;
+export default StudentDashboard;

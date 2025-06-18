@@ -187,21 +187,19 @@ const UserManagement = () => {
       {/* Add tabs for switching between users and approval requests */}
       <div className="flex border-b border-gray-200 mb-6">
         <button
-          className={`py-2 px-4 font-medium ${
-            activeTab === "users"
+          className={`py-2 px-4 font-medium ${activeTab === "users"
               ? "text-[#042E6F] border-b-2 border-[#042E6F]"
               : "text-gray-500 hover:text-[#042E6F]"
-          }`}
+            }`}
           onClick={() => setActiveTab("users")}
         >
           Users
         </button>
         <button
-          className={`py-2 px-4 font-medium ${
-            activeTab === "approvals"
+          className={`py-2 px-4 font-medium ${activeTab === "approvals"
               ? "text-[#042E6F] border-b-2 border-[#042E6F]"
               : "text-gray-500 hover:text-[#042E6F]"
-          }`}
+            }`}
           onClick={() => setActiveTab("approvals")}
         >
           Approval Requests
@@ -361,9 +359,8 @@ const UserManagement = () => {
                         </td>
                         <td className="py-4 px-4">
                           <span
-                            className={`px-2 py-1 rounded text-xs font-semibold ${
-                              user.role === "Student" ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-800"
-                            }`}
+                            className={`px-2 py-1 rounded text-xs font-semibold ${user.role === "Student" ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-800"
+                              }`}
                           >
                             {user.role}
                           </span>

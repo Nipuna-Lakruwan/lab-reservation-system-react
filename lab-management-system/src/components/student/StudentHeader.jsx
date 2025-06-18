@@ -1,18 +1,19 @@
 /**
  * Copyright (c) 2025 Nipuna Lakruwan
  */
-import React, { useState, useRef, useEffect } from "react";
-import { FaBars, FaBell, FaUserCircle, FaSignOutAlt, FaUser } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaBars, FaBell, FaUserCircle, FaSignOutAlt, FaUser } from "react-icons/fa";
 
-const LecturerHeader = ({ onSidebarToggle }) => {
-  const [notificationCount, setNotificationCount] = useState(2);
+const StudentHeader = ({ onSidebarToggle }) => {
+  const [notificationCount, setNotificationCount] = useState(3);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: 1, text: "Your reservation request was approved", time: "10 min ago", read: false },
-    { id: 2, text: "New system update available", time: "2 hours ago", read: false },
-    { id: 3, text: "Your profile was updated", time: "1 day ago", read: true }
+    { id: 1, text: "Your lab booking request was approved", time: "5 min ago", read: false },
+    { id: 2, text: "New lab materials uploaded for CS101", time: "1 hour ago", read: false },
+    { id: 3, text: "Physics Lab session rescheduled", time: "3 hours ago", read: false },
+    { id: 4, text: "Complete your lab feedback survey", time: "1 day ago", read: true }
   ]);
 
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const LecturerHeader = ({ onSidebarToggle }) => {
 
   // Fetch user data from localStorage
   const userStr = localStorage.getItem("user");
-  const user = userStr ? JSON.parse(userStr) : { name: "Lecturer" };
+  const user = userStr ? JSON.parse(userStr) : { name: "John Smith" };
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -48,7 +49,7 @@ const LecturerHeader = ({ onSidebarToggle }) => {
     navigate("/login");
   };
 
-  // Handle notification click
+  // Mark notification as read
   const handleNotificationClick = (id) => {
     setNotifications(prev =>
       prev.map(notification =>
@@ -73,7 +74,7 @@ const LecturerHeader = ({ onSidebarToggle }) => {
             className="header-logo max-h-[40px] bg-white p-1 rounded shadow mr-3"
           />
           <h1 className="text-white text-xl font-bold m-0">
-            Lecturer Portal
+            Student Portal
           </h1>
         </div>
       </div>
@@ -145,7 +146,7 @@ const LecturerHeader = ({ onSidebarToggle }) => {
               <div className="py-1">
                 <button
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  onClick={() => navigate('/lecturer/profile')}
+                  onClick={() => navigate('/student/profile')}
                 >
                   <FaUser className="mr-2" /> My Profile
                 </button>
@@ -164,4 +165,4 @@ const LecturerHeader = ({ onSidebarToggle }) => {
   );
 };
 
-export default LecturerHeader;
+export default StudentHeader;

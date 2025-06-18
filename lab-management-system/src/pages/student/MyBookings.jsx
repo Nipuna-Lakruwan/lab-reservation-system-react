@@ -2,103 +2,105 @@
  * Copyright (c) 2025 Nipuna Lakruwan
  */
 import React, { useState } from "react";
-import { FaSearch, FaFilter, FaCalendarAlt, FaClock, FaFlask, FaInfoCircle, FaTimes, FaEye, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import {
+  FaCalendarAlt, FaClock, FaFlask, FaMapMarkerAlt,
+  FaInfoCircle, FaTimes, FaEye, FaTrashAlt, FaFilter,
+  FaSearch, FaBook, FaUsers
+} from "react-icons/fa";
 
-// Sample reservation data
-const initialReservations = [
+// Sample bookings data
+const initialBookings = [
   {
     id: 1,
     lab: "Physics Lab",
-    course: "PHY301: Advanced Physics",
+    labId: 1,
+    course: "PHY101: Introduction to Physics",
     date: "2025-06-22",
     time: "10:00 - 12:00",
     status: "Approved",
     requestDate: "2025-06-15",
-    studentCount: 25,
-    purpose: "Practical demonstration of wave properties",
-    equipment: ["Oscilloscope", "Wave Generator", "Optical Bench"]
+    groupSize: 4,
+    purpose: "Conducting experiments on motion and forces",
+    equipment: ["Oscilloscope", "Wave Generator", "Optical Bench"],
+    labAssistant: "Dr. Alan Johnson"
   },
   {
     id: 2,
     lab: "Computer Lab A",
+    labId: 3,
     course: "CS101: Introduction to Programming",
     date: "2025-06-25",
     time: "14:00 - 16:00",
     status: "Pending",
-    requestDate: "2025-06-16",
-    studentCount: 30,
-    purpose: "Programming tutorial session",
-    equipment: ["Desktop Computers", "Projector"]
+    requestDate: "2025-06-17",
+    groupSize: 3,
+    purpose: "Working on programming assignment",
+    equipment: ["Desktop Computers", "Development Software"],
+    labAssistant: "Pending assignment"
   },
   {
     id: 3,
     lab: "Chemistry Lab",
+    labId: 2,
     course: "CHM202: Organic Chemistry",
     date: "2025-06-28",
     time: "09:00 - 11:00",
     status: "Approved",
-    requestDate: "2025-06-14",
-    studentCount: 20,
-    purpose: "Experiment on organic compounds",
-    equipment: ["Fume Hood", "Analytical Balance", "Centrifuge"]
+    requestDate: "2025-06-16",
+    groupSize: 5,
+    purpose: "Conducting experiments on organic compounds",
+    equipment: ["Fume Hood", "Analytical Balance", "Centrifuge"],
+    labAssistant: "Dr. Emily Rodriguez"
   },
   {
     id: 4,
     lab: "Computer Lab B",
+    labId: 4,
     course: "CS404: Advanced Software Engineering",
     date: "2025-07-05",
     time: "13:00 - 15:00",
     status: "Rejected",
     requestDate: "2025-06-18",
-    studentCount: 25,
-    purpose: "Software architecture workshop",
-    equipment: ["Desktop Computers", "Projector", "Whiteboard"],
+    groupSize: 2,
+    purpose: "Working on final project",
+    equipment: ["Desktop Computers", "Development Software"],
+    labAssistant: "N/A",
     rejectionReason: "Lab is undergoing maintenance during the requested time slot."
-  },
-  {
-    id: 5,
-    lab: "Physics Lab",
-    course: "PHY301: Advanced Physics",
-    date: "2025-07-10",
-    time: "09:00 - 11:00",
-    status: "Approved",
-    requestDate: "2025-06-20",
-    studentCount: 25,
-    purpose: "Electromagnetism experiment",
-    equipment: ["Oscilloscope", "Multimeter", "Power Supply"]
   }
 ];
 
-const MyReservations = () => {
-  const [reservations, setReservations] = useState(initialReservations);
+const MyBookings = () => {
+  const [bookings, setBookings] = useState(initialBookings);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
   const [showPast, setShowPast] = useState(false);
   const [modal, setModal] = useState(null);
+  const navigate = useNavigate();
 
-  // Filter reservations based on search term, status, and date
-  const filteredReservations = reservations.filter(reservation => {
+  // Filter bookings based on search term, status, and date
+  const filteredBookings = bookings.filter(booking => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const reservationDate = new Date(reservation.date);
-    const isPast = reservationDate < today;
+    const bookingDate = new Date(booking.date);
+    const isPast = bookingDate < today;
 
-    // Filter past reservations if showPast is false
+    // Filter past bookings if showPast is false
     if (!showPast && isPast) return false;
 
     // Apply status filter
-    if (statusFilter !== "all" && reservation.status.toLowerCase() !== statusFilter) return false;
+    if (statusFilter !== "all" && booking.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
 
     // Apply date filter
-    if (dateFilter && reservation.date !== dateFilter) return false;
+    if (dateFilter && booking.date !== dateFilter) return false;
 
     // Apply search term filter
     const searchLower = searchTerm.toLowerCase();
     return (
-      reservation.lab.toLowerCase().includes(searchLower) ||
-      reservation.course.toLowerCase().includes(searchLower) ||
-      reservation.purpose.toLowerCase().includes(searchLower)
+      booking.lab.toLowerCase().includes(searchLower) ||
+      booking.course.toLowerCase().includes(searchLower) ||
+      booking.purpose.toLowerCase().includes(searchLower)
     );
   });
 
@@ -108,15 +110,15 @@ const MyReservations = () => {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  // Handle reservation cancellation
-  const handleCancelReservation = () => {
+  // Handle booking cancellation
+  const handleCancelBooking = () => {
     if (!modal) return;
 
-    setReservations(prev =>
-      prev.map(r =>
-        r.id === modal.id
-          ? { ...r, status: "Cancelled" }
-          : r
+    setBookings(prev =>
+      prev.map(b =>
+        b.id === modal.id
+          ? { ...b, status: "Cancelled" }
+          : b
       )
     );
 
@@ -127,22 +129,22 @@ const MyReservations = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case "Approved":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 border-green-200";
       case "Pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "Rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800 border-red-200";
       case "Cancelled":
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 border-gray-200";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-[#042E6F] mb-2">My Reservations</h1>
-      <p className="mb-6 text-gray-700">View and manage all your lab reservation requests.</p>
+      <h1 className="text-2xl md:text-3xl font-bold text-[#042E6F] mb-2">My Bookings</h1>
+      <p className="mb-6 text-gray-700">View and manage all your lab bookings.</p>
 
       {/* Filters and Search */}
       <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-l-4 border-[#042E6F] mb-6">
@@ -189,7 +191,7 @@ const MyReservations = () => {
                 className="h-4 w-4 text-[#042E6F] focus:ring-[#042E6F] border-gray-300 rounded"
               />
               <label htmlFor="showPast" className="ml-2 block text-sm text-gray-700">
-                Show past reservations
+                Show past bookings
               </label>
             </div>
 
@@ -214,22 +216,28 @@ const MyReservations = () => {
         </div>
       </div>
 
-      {/* Reservations List */}
+      {/* Bookings List */}
       <div className="mb-6">
-        {filteredReservations.length === 0 ? (
+        {filteredBookings.length === 0 ? (
           <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-[#042E6F] text-center">
             <FaInfoCircle className="text-[#042E6F] text-4xl mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">No Reservations Found</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">No Bookings Found</h3>
+            <p className="text-gray-600 mb-4">
               {searchTerm || statusFilter !== "all" || dateFilter
                 ? "Try adjusting your filters or search criteria."
-                : "You haven't made any lab reservations yet."}
+                : "You haven't made any lab bookings yet."}
             </p>
+            <button
+              onClick={() => navigate('/student/book-lab')}
+              className="bg-[#042E6F] text-white px-4 py-2 rounded-lg hover:bg-[#021E47] transition"
+            >
+              Book a Lab
+            </button>
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredReservations.map(reservation => (
-              <div key={reservation.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition">
+            {filteredBookings.map(booking => (
+              <div key={booking.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition">
                 <div className="p-4 md:p-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
@@ -238,38 +246,38 @@ const MyReservations = () => {
                           <FaFlask className="text-[#042E6F]" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-[#042E6F]">{reservation.lab}</h3>
-                          <p className="text-sm text-gray-600">{reservation.course}</p>
+                          <h3 className="font-bold text-[#042E6F]">{booking.lab}</h3>
+                          <p className="text-sm text-gray-600">{booking.course}</p>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600 mb-3">
                         <div className="flex items-center">
                           <FaCalendarAlt className="mr-1 text-gray-400" />
-                          {formatDate(reservation.date)}
+                          {formatDate(booking.date)}
                         </div>
                         <div className="flex items-center">
                           <FaClock className="mr-1 text-gray-400" />
-                          {reservation.time}
+                          {booking.time}
                         </div>
                         <div className="flex items-center">
                           <FaUsers className="mr-1 text-gray-400" />
-                          {reservation.studentCount} students
+                          {booking.groupSize} students
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col xs:flex-row gap-2 justify-end">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(reservation.status)}`}>
-                        {reservation.status}
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(booking.status)}`}>
+                        {booking.status}
                       </span>
                       <button
-                        onClick={() => setModal({ type: 'view', ...reservation })}
+                        onClick={() => setModal({ type: 'view', ...booking })}
                         className="bg-[#042E6F] text-white px-3 py-1 rounded-full text-xs hover:bg-[#021E47] transition flex items-center justify-center"
                       >
                         <FaEye className="mr-1" /> View Details
                       </button>
-                      {(reservation.status === "Pending" || reservation.status === "Approved") && new Date(reservation.date) > new Date() && (
+                      {(booking.status === "Pending" || booking.status === "Approved") && new Date(booking.date) > new Date() && (
                         <button
-                          onClick={() => setModal({ type: 'cancel', id: reservation.id, lab: reservation.lab, date: reservation.date })}
+                          onClick={() => setModal({ type: 'cancel', id: booking.id, lab: booking.lab, date: booking.date })}
                           className="bg-red-600 text-white px-3 py-1 rounded-full text-xs hover:bg-red-700 transition flex items-center justify-center"
                         >
                           <FaTrashAlt className="mr-1" /> Cancel
@@ -279,14 +287,14 @@ const MyReservations = () => {
                   </div>
 
                   <div className="text-sm text-gray-700 mt-2">
-                    <strong>Purpose:</strong> {reservation.purpose}
+                    <strong>Purpose:</strong> {booking.purpose}
                   </div>
 
-                  {reservation.equipment.length > 0 && (
+                  {booking.equipment.length > 0 && (
                     <div className="mt-3">
                       <div className="text-xs text-gray-500 mb-1">Equipment:</div>
                       <div className="flex flex-wrap gap-2">
-                        {reservation.equipment.map((item, idx) => (
+                        {booking.equipment.map((item, idx) => (
                           <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
                             {item}
                           </span>
@@ -295,10 +303,10 @@ const MyReservations = () => {
                     </div>
                   )}
 
-                  {reservation.status === "Rejected" && reservation.rejectionReason && (
+                  {booking.status === "Rejected" && booking.rejectionReason && (
                     <div className="mt-3 bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
                       <div className="text-xs font-semibold text-red-700 mb-1">Rejection Reason:</div>
-                      <div className="text-sm text-red-700">{reservation.rejectionReason}</div>
+                      <div className="text-sm text-red-700">{booking.rejectionReason}</div>
                     </div>
                   )}
                 </div>
@@ -313,7 +321,7 @@ const MyReservations = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl overflow-hidden">
             <div className="bg-[#042E6F] text-white px-6 py-4 flex justify-between items-center">
-              <h3 className="text-xl font-semibold">Reservation Details</h3>
+              <h3 className="text-xl font-semibold">Booking Details</h3>
               <button
                 onClick={() => setModal(null)}
                 className="text-white hover:text-gray-200 text-2xl"
@@ -342,8 +350,8 @@ const MyReservations = () => {
                       <div className="text-gray-500">Time:</div>
                       <div className="col-span-2 font-medium">{modal.time}</div>
 
-                      <div className="text-gray-500">Students:</div>
-                      <div className="col-span-2 font-medium">{modal.studentCount}</div>
+                      <div className="text-gray-500">Group Size:</div>
+                      <div className="col-span-2 font-medium">{modal.groupSize} students</div>
 
                       <div className="text-gray-500">Status:</div>
                       <div className="col-span-2">
@@ -354,6 +362,9 @@ const MyReservations = () => {
 
                       <div className="text-gray-500">Requested:</div>
                       <div className="col-span-2 font-medium">{formatDate(modal.requestDate)}</div>
+
+                      <div className="text-gray-500">Lab Assistant:</div>
+                      <div className="col-span-2 font-medium">{modal.labAssistant}</div>
                     </div>
                   </div>
                 </div>
@@ -390,7 +401,7 @@ const MyReservations = () => {
                     onClick={() => setModal({ type: 'cancel', id: modal.id, lab: modal.lab, date: modal.date })}
                     className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition mr-3"
                   >
-                    Cancel Reservation
+                    Cancel Booking
                   </button>
                 )}
                 <button
@@ -410,7 +421,7 @@ const MyReservations = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md overflow-hidden">
             <div className="bg-red-600 text-white px-6 py-4 flex justify-between items-center">
-              <h3 className="text-xl font-semibold">Cancel Reservation</h3>
+              <h3 className="text-xl font-semibold">Cancel Booking</h3>
               <button
                 onClick={() => setModal(null)}
                 className="text-white hover:text-gray-200 text-2xl"
@@ -421,7 +432,7 @@ const MyReservations = () => {
             </div>
             <div className="p-6">
               <p className="mb-6">
-                Are you sure you want to cancel your reservation for <strong>{modal.lab}</strong> on <strong>{formatDate(modal.date)}</strong>?
+                Are you sure you want to cancel your booking for <strong>{modal.lab}</strong> on <strong>{formatDate(modal.date)}</strong>?
               </p>
               <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
                 <p className="text-yellow-700 text-sm">
@@ -441,10 +452,10 @@ const MyReservations = () => {
                   onClick={() => setModal(null)}
                   className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
                 >
-                  Keep Reservation
+                  Keep Booking
                 </button>
                 <button
-                  onClick={handleCancelReservation}
+                  onClick={handleCancelBooking}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
                 >
                   Confirm Cancellation
@@ -458,4 +469,4 @@ const MyReservations = () => {
   );
 };
 
-export default MyReservations;
+export default MyBookings;

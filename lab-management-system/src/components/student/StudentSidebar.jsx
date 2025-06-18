@@ -5,31 +5,34 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaHome,
+  FaFlask,
   FaCalendarAlt,
-  FaClipboardCheck,
-  FaPlus,
+  FaPlusCircle,
+  FaHistory,
   FaUser,
   FaSignOutAlt,
-  FaChalkboardTeacher,
+  FaGraduationCap,
   FaTimes
 } from "react-icons/fa";
 
-// Demo lecturer data
-const lecturer = {
-  name: "Dr. Sarah Johnson",
-  role: "Lecturer",
-  image: "https://randomuser.me/api/portraits/women/44.jpg"
+// Demo student data
+const student = {
+  name: "John Smith",
+  role: "Student",
+  department: "Computer Science",
+  image: "https://randomuser.me/api/portraits/men/32.jpg"
 };
 
 const navLinks = [
-  { to: "/lecturer", label: "Dashboard", icon: <FaHome /> },
-  { to: "/lecturer/request-reservation", label: "Request Reservation", icon: <FaPlus /> },
-  { to: "/lecturer/my-reservations", label: "My Reservations", icon: <FaCalendarAlt /> },
-  { to: "/lecturer/approved-sessions", label: "Approved Sessions", icon: <FaClipboardCheck /> },
-  { to: "/lecturer/profile", label: "My Profile", icon: <FaUser /> },
+  { to: "/student", label: "Dashboard", icon: <FaHome /> },
+  { to: "/student/view-labs", label: "View Labs", icon: <FaFlask /> },
+  { to: "/student/book-lab", label: "Book a Lab", icon: <FaPlusCircle /> },
+  { to: "/student/my-bookings", label: "My Bookings", icon: <FaCalendarAlt /> },
+  { to: "/student/reservation-history", label: "Reservation History", icon: <FaHistory /> },
+  { to: "/student/profile", label: "My Profile", icon: <FaUser /> },
 ];
 
-const LecturerSidebar = ({ open = true, onClose }) => {
+const StudentSidebar = ({ open = true, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -48,10 +51,10 @@ const LecturerSidebar = ({ open = true, onClose }) => {
       <aside className={`sidebar bg-white shadow-lg fixed h-full z-50 w-[260px] transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="sidebar-header">
           <div className="user-profile flex flex-col items-center py-5 w-full border-b border-gray-200">
-            <img src={lecturer.image} alt="User Profile" className="profile-image w-20 h-20 rounded-full object-cover border-4 border-[#042E6F33]" />
-            <h3 className="user-name font-bold text-[#042E6F] text-lg mt-2">{lecturer.name}</h3>
+            <img src={student.image} alt="User Profile" className="profile-image w-20 h-20 rounded-full object-cover border-4 border-[#042E6F33]" />
+            <h3 className="user-name font-bold text-[#042E6F] text-lg mt-2">{student.name}</h3>
             <p className="user-role text-gray-500 text-sm flex items-center">
-              <FaChalkboardTeacher className="mr-1" /> {lecturer.role}
+              <FaGraduationCap className="mr-1" /> {student.role} - {student.department}
             </p>
           </div>
           {/* {onClose && (
@@ -103,4 +106,4 @@ const LecturerSidebar = ({ open = true, onClose }) => {
   );
 };
 
-export default LecturerSidebar;
+export default StudentSidebar;
