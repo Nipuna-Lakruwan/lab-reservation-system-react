@@ -38,7 +38,7 @@ function App() {
   // Redirect based on user role
   const getHomePage = () => {
     if (!isAuthenticated) return <Navigate to="/login" />;
-    
+
     if (userRole === "admin") {
       return (
         <AdminLayout>
@@ -52,7 +52,7 @@ function App() {
         </LecturerLayout>
       );
     }
-    
+
     // Fallback
     return <Navigate to="/login" />;
   };
@@ -64,10 +64,10 @@ function App() {
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
         <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
         <Route path="/pending-approval" element={!isPending ? <Navigate to="/login" /> : <PendingApproval />} />
-        
+
         {/* Home route - redirects based on role */}
         <Route path="/" element={getHomePage()} />
-        
+
         {/* Admin Routes */}
         {isAuthenticated && userRole === "admin" && (
           <>
@@ -81,7 +81,7 @@ function App() {
             <Route path="/user-profiles" element={<AdminLayout><UserProfiles /></AdminLayout>} />
           </>
         )}
-        
+
         {/* Lecturer Routes */}
         {isAuthenticated && userRole === "lecturer" && (
           <>
@@ -92,7 +92,7 @@ function App() {
             <Route path="/lecturer/profile" element={<LecturerLayout><LecturerProfile /></LecturerLayout>} />
           </>
         )}
-        
+
         {/* Catch-all redirect to login */}
         <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />
       </Routes>
